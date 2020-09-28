@@ -37,23 +37,12 @@ services:
       - consumer-internal
 
   # Data App (REST consumer, displays web page)
-	consumer-app:
-		image: fraunhoferaisec/example-server:${EXAMPLE_TAG:-develop}
-		ports:
-		- "8081:8081"
-		networks:
-		- consumer-internal
-	api-app:
-		build:
-			context: ./con-app/
-		ports:
-			- "8888:8888"
-		volumes:
-			- ./con-app/app:/app
-		command: >
-			sh -c "python merge_api.py & python wheat_rust_bot.py & python da_verification.py"
-		networks:
-			- consumer-internal
+  consumer-app:
+    image: fraunhoferaisec/example-server:${EXAMPLE_TAG:-develop}
+    ports:
+      - "8081:8081"
+    networks:
+      - consumer-internal
 
 networks:
   ids-wide:
