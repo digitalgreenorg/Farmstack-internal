@@ -815,7 +815,7 @@ function merge_data(){
     }
   ]
   var reqData = {"data1": DaData, "data2" : wheat_data};
-  request('https://api-app:8088/',
+  request('https://api-app:8888/',
     { json: true, body: requestData },
       function(err, res, body) {
         console.log(res);
