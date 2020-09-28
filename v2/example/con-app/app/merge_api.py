@@ -7,7 +7,32 @@ import requests
 
 print("---merge_api--")
 
+class JSONEncoder(json.JSONEncoder):
+	def default(self, o):
+		if isinstance(o, ObjectId):
+			return str(o)
+		return json.JSONEncoder.default(self, o)
+
+def parse_json2(json2):
+	data = []
+	json2 = json2.replace("}]", "").replace('[', '').replace('{', '').replace(']','')
+	for val in json2.split('},'):
+		temp_dict = {}
+		for v in val.split(', '):
+			try:
+				key, val1 = v.split('=')
+				prev = key.strip()
+				temp_dict[key.strip()] = val1.strip()
+			except:
+				# key, val, val1 = v.split('=')
+				# val += val1
+				print(prev, v.strip())
+				temp_dict[prev] += ', ' + v.strip()
+		data.append(temp_dict)
+	return data
+
 def merge_jsons(json1, json2):
+	print(json1, json2)
 
 	merge_cols = ['Region', 'Zone', 'Woreda', 'Kebele']
 	data_fromda = ['Name', 'Phone_Number', 'Father_s_Name', 'Kebele']
@@ -136,9 +161,22 @@ class MainHandler(tornado.web.RequestHandler):
 		merge_jsons(req_data["data1"], req_data["data2"])
 		self.write("Processed")
 
+
+class JsonFormatter(tornado.web.RequestHandler):
+	def get(self):
+		self.write("No get methods")
+	
+	def post(self):
+		req_data = json.dumps(parse_json2(str(self.request.body)))
+		# merge_jsons(req_data["data1"], req_data["data2"])
+		# self.write(str(req_data))
+		self.write(JSONEncoder().encode(req_data))
+		self.finish()
+
 def make_app():
 	return tornado.web.Application([
 		(r"/", MainHandler),
+		(r"/format/", JsonFormatter),
 	])
 
 if __name__ == "__main__":

@@ -33,7 +33,7 @@
       <from
         uri="idsserver://0.0.0.0:9292/?sslContextParameters=#serverSslContext&amp;attestation=0"/>
       <log message="Received via IDS protocol: ${body}"/>
-      <!--<to uri="testEndpoint"/>-->
+      <to uri="testEndpoint"/>
     </route>
   </camelContext>
 </blueprint>

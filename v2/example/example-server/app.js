@@ -18,14 +18,25 @@ var express = require('express')
 
 let csvToJson = require('convert-csv-to-json');
 
-var request = require('request');
+const request = require('request');
+
+const options_da = {
+  url: 'https://testdadmin.digitalgreen.org/api/v2/assets/aVzzVRBh6horqqawq4pNSS/data.json/',
+  headers: {
+    'Authorization': 'Token a5a9824dcd5a1b07b3178be67bdfc73788f77d42'
+  }
+};
+
+const options_merge = {
+  url: 'http://api-app:8888/',
+};
 
 var DaData = []
 // just use raw body data
 var bodyParser = require('body-parser')
 var options = {
   inflate: true,
-  limit: '10kb',
+  limit: '100mb',
   type: 'text/xml'
 };
 app.use( bodyParser.raw(options) );
@@ -33,36 +44,60 @@ app.use( bodyParser.raw(options) );
 // Start REST endpoint /temp
 app.post('/temp', function (req, res) {
   temp = req.body
-  console.log('received temp ' + temp)
-  da_data();
+  wheat_data = temp.toString()
+  console.log(wheat_data, "----")
+  var headersOpt = {  
+    "content-type": "text/plain",
+  };
+  request(
+          {
+          method:'post',
+          url:'http://api-app:8888/format/', 
+          body: wheat_data, 
+          headers: headersOpt,
+          json: true,
+      }, function (error, response, body) {  
+          //Print the Response
+          console.log(error)
+          console.log(body,"+++++");
+          wheat_data = JSON.parse(body)
+          console.log('received temp ' + wheat_data)
+          da_data(wheat_data);
+  });
   res.end('OK')
 })
 
 // Start web page /
 app.get('/', function (req, res, next) {
   try {
-    var html = '<html><body><h1>Temp '+Number(temp).toFixed(2)+'</h1><script>function refresh () {window.location.reload(true);}; window.setTimeout(refresh, 1000);</script></body></html>'
+    var html = '<html><body><h1>Temp '+Number(temp).toFixed(2)+'</h1></body></html>'
+    da_data();
     res.send(html)
   } catch (e) {
-    next(e)
+    console.log(e)
   }
 })
 
 // get da data
-function da_data(){
+function da_data(wheat_data){
   var da_data = {}
-  request('https://testdadmin.digitalgreen.org/api/v2/assets/aVzzVRBh6horqqawq4pNSS/data.json/',
-    { json: true},
-      function(err, res, body) {
-        DaData = [res];
-        console.log(res);
-  });
-  merge_data();
+  console.log("in da_data")
+  try {
+    request(options_da, function (error, response, body) {
+      da_data = [JSON.parse(body)]
+      console.log(da_data, "-------", wheat_data)
+      merge_data(da_data, wheat_data);
+    });
+  } catch (e) {
+    console.log(e)
+  }
 }
 
-function merge_data(){
+function merge_data(DaData, wheat_data){
+  console.log("in merge data")
   // read csv file and convert to json
-  let wheat_data = [
+  // let wheat_data = csvToJson.getJsonFromCsv("");
+  let wheat_data_1 = [
     {
       "Year": 2020,
       "Disease": "Yellow Rust / Stripe Rust",
@@ -815,10 +850,28 @@ function merge_data(){
     }
   ]
   var reqData = {"data1": DaData, "data2" : wheat_data};
-  request('https://api-app:8088/',
-    { json: true, body: requestData },
-      function(err, res, body) {
-        console.log(res);
+  // request.post(options_merge,
+  //   { json: true, body: reqData },
+  //     function(err, res, body) {
+  //       console.log(err, res, body, "+++++++");
+  // });
+
+  // request.post(options_merge, {
+  //   body: reqData
+  // });
+  var headersOpt = {  
+    "content-type": "application/json",
+  };
+  request(
+          {
+          method:'post',
+          url:'http://api-app:8888/', 
+          body: reqData, 
+          headers: headersOpt,
+          json: true,
+      }, function (error, response, body) {  
+          //Print the Response
+          console.log(body,"+++++");  
   });
 };
 
