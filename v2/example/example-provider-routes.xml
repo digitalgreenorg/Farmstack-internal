@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<blueprint xmlns="http://www.osgi.org/xmlns/blueprint/v1.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:camel="http://camel.apache.org/schema/blueprint"
+  xsi:schemaLocation="
+ http://www.osgi.org/xmlns/blueprint/v1.0.0 http://www.osgi.org/xmlns/blueprint/v1.0.0/blueprint.xsd
+ http://camel.apache.org/schema/blueprint http://camel.apache.org/schema/blueprint/camel-blueprint.xsd">
+
+  <!-- Define TLS configuration for data provider -->
+  <camel:sslContextParameters id="clientSslContext">
+    <camel:keyManagers keyPassword="password">
+      <camel:keyStore resource="etc/provider-keystore.p12" password="password"/>
+    </camel:keyManagers>
+    <camel:trustManagers>
+      <camel:keyStore resource="etc/truststore.p12" password="password"/>
+    </camel:trustManagers>
+  </camel:sslContextParameters>
+
+  <camel:dataFormats>
+    <camel:json id="jack" library="Jackson" prettyPrint="true"/>
+  </camel:dataFormats>
+
+  <!-- Routes -->
+  <camelContext xmlns="http://camel.apache.org/schema/blueprint">
+    <restConfiguration component="jetty" bindingMode="off" port="8989" enableCORS="true"/>
+    <!-- defines the rest services using the context-path /user -->
+    <rest path="/postUSImg">
+      <description>User rest service</description>
+      <post>
+        <to uri="direct:update"/>
+      </post>
+    </rest>
+
+
+    <!-- Retrieve temperature value from Data App via HTTP GET request and forward it over secure IDS protocol,
+          setting remote attestation to most relaxed config (for demo only. Use 1 in production )-->
+    <route id="sendData">
+      <!--<from uri="direct:update"/>-->
+      <from uri="file://deploy/?fileName=Wheatqualitycertification_short.csv&amp;charset=utf-8&amp;noop=true"/>
+      <!--<convertBodyTo type="java.io.InputStream"/>-->
+      <unmarshal>
+        <csv delimiter=","  useMaps="true" />
+      </unmarshal>
+      <log message="unmarshalled: ${body.class.name} ${body}" loggingLevel="WARN"/>
+
+      <!--<marshal>
+        <base64/>
+      </marshal>-->
+      <to uri="idsclient://consumer-core:9292/?sslContextParameters=#clientSslContext&amp;attestation=0"/>
+    </route>
+  </camelContext>
+</blueprint>
