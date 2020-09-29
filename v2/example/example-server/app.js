@@ -48,8 +48,8 @@ var da_data = ""
 function identify_data(data){
   try{
     data = JSON.parse(data)
-    if (data[0]["count"]){
-      da_data = data
+    if (data["count"]){
+      da_data = [data]
     }
     else{
       wheat_data = data
