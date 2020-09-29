@@ -7,6 +7,8 @@ import requests
 
 print("---merge_api--")
 
+PREV_JSON = {}
+
 class JSONEncoder(json.JSONEncoder):
 	def default(self, o):
 		if isinstance(o, ObjectId):
@@ -31,8 +33,24 @@ def parse_json2(json2):
 		data.append(temp_dict)
 	return data
 
+def detect_change(json2):
+	global PREV_JSON
+	if PREV_JSON == {}:
+		PREV_JSON = json2
+		return True
+	else:
+		if PREV_JSON != json2:
+			PREV_JSON = json2
+			return True
+		else:
+			return False
+
 def merge_jsons(json1, json2):
+	
 	print(json1, json2)
+
+	if not detect_change(json2):
+		return False
 
 	merge_cols = ['Region', 'Zone', 'Woreda', 'Kebele']
 	data_fromda = ['Name', 'Phone_Number', 'Father_s_Name', 'Kebele']
@@ -135,6 +153,7 @@ def call_telebots_dva():
 				for conf_d in conf_data:
 					if val.lower() in conf_d["name"].lower():
 						send_message_dva(val, conf_d["chat_id"])
+	return True
 
 def call_telebots_wrb():
 	# {"name": "sagar singh", "chat_id": 817454976}
@@ -158,8 +177,10 @@ class MainHandler(tornado.web.RequestHandler):
 	
 	def post(self):
 		req_data = json.loads(self.request.body)
-		merge_jsons(req_data["data1"], req_data["data2"])
-		self.write("Processed")
+		if merge_jsons(req_data["data1"], req_data["data2"]):
+			self.write("Processed")
+		else:
+			self.write("No Change detected")
 
 
 class JsonFormatter(tornado.web.RequestHandler):

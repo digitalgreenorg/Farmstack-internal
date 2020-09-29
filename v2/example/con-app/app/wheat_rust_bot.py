@@ -93,7 +93,7 @@ def warning_message(update, context):
 def control_action(update, context):
     """give control info"""
     reply_keyboard = [['Next']]
-    update.message.reply_text('Control should be considered for farmers growing the following varieties \n 1. variety 1 \n 2. variety 2',
+    update.message.reply_text('Control should be considered for farmers growing the following varieties \n 1. Kubasa \n 2. Lemu',
                               reply_markup=ReplyKeyboardMarkup(reply_keyboard, one_time_keyboard=True))
 
     return ACTION_2

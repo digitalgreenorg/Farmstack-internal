@@ -59,9 +59,9 @@ app.post('/temp', function (req, res) {
       }, function (error, response, body) {  
           //Print the Response
           console.log(error)
-          console.log(body,"+++++");
+          //console.log(body,"+++++");
           wheat_data = JSON.parse(body)
-          console.log('received temp ' + wheat_data)
+          //console.log('received temp ' + wheat_data)
           da_data(wheat_data);
   });
   res.end('OK')
