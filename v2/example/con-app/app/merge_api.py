@@ -7,7 +7,7 @@ import requests
 
 print("---merge_api--")
 
-PREV_JSON = {}
+# PREV_JSON = ""
 
 class JSONEncoder(json.JSONEncoder):
 	def default(self, o):
@@ -28,26 +28,31 @@ def parse_json2(json2):
 			except:
 				# key, val, val1 = v.split('=')
 				# val += val1
-				print(prev, v.strip())
+				# print(prev, v.strip())
 				temp_dict[prev] += ', ' + v.strip()
 		data.append(temp_dict)
 	return data
 
 def detect_change(json2):
-	global PREV_JSON
-	if PREV_JSON == {}:
-		PREV_JSON = json2
+	# global PREV_JSON
+	# print(PREV_JSON, json2)
+	try:
+		with open("prev_json.json", "r") as ofs:
+			data = json.loads(ofs.readlines()[0])
+			if data == json2:
+				return False
+			else:
+				with open("prev_json.json", "w") as ofs:
+					ofs.write(json.dumps(json2))
+				return True
+	except:
+		with open("prev_json.json", "w") as ofs:
+			ofs.write(json.dumps(json2))
 		return True
-	else:
-		if PREV_JSON != json2:
-			PREV_JSON = json2
-			return True
-		else:
-			return False
 
 def merge_jsons(json1, json2):
 	
-	print(json1, json2)
+	# print(json1, json2)
 
 	if not detect_change(json2):
 		return False
