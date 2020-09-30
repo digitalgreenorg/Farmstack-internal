@@ -7,7 +7,7 @@ import requests
 
 print("---merge_api--")
 
-PREV_JSON = {}
+PREV_JSON = ""
 
 class JSONEncoder(json.JSONEncoder):
 	def default(self, o):
@@ -28,26 +28,27 @@ def parse_json2(json2):
 			except:
 				# key, val, val1 = v.split('=')
 				# val += val1
-				print(prev, v.strip())
+				# print(prev, v.strip())
 				temp_dict[prev] += ', ' + v.strip()
 		data.append(temp_dict)
 	return data
 
 def detect_change(json2):
 	global PREV_JSON
-	if PREV_JSON == {}:
-		PREV_JSON = json2
+	# print(PREV_JSON, json2)
+	if PREV_JSON == "":
+		PREV_JSON = str(json2)
 		return True
 	else:
-		if PREV_JSON != json2:
-			PREV_JSON = json2
+		if PREV_JSON != str(json2):
+			PREV_JSON = str(json2)
 			return True
 		else:
 			return False
 
 def merge_jsons(json1, json2):
 	
-	print(json1, json2)
+	# print(json1, json2)
 
 	if not detect_change(json2):
 		return False
@@ -204,3 +205,4 @@ if __name__ == "__main__":
 	app = make_app()
 	app.listen(8888)
 	tornado.ioloop.IOLoop.current().start()
+

@@ -48,28 +48,37 @@ var da_data = ""
 function identify_data(data){
   try{
     data = JSON.parse(data)
-    if (data["count"]){
+    if (data["next"]===null && da_data===""){
       da_data = [data]
+      console.log('in if part')
     }
-    else{
+    else if(wheat_data==="" && data.length > 0){
       wheat_data = data
+      console.log(wheat_data)
     }
   }
   catch(e){
-    console.log(e)
+    console.log(e, "error")
   }
 };
 
 // Start REST endpoint /temp
 app.post('/temp', function (req, res) {
   temp = req.body.toString()
+  console.log(temp)
   identify_data(temp);
-
+  // console.log("wheat data", wheat_data, "---", "da data", da_data, "---")
   // trigger only if both data are valid
   if(wheat_data != ""){
     if(da_data != ""){
       merge_data(da_data, wheat_data);
     }
+    else{
+	 console.log("waiting for file 2")
+    }
+  }
+  else{
+	console.log("waiting for file 1")
   }
   // wheat_data = temp.toString()
   // console.log(wheat_data, "----")
@@ -146,3 +155,4 @@ var server = app.listen(8081, function () {
   var port = server.address().port
   console.log("REST API listening at http://%s:%s", host, port)
 })
+
