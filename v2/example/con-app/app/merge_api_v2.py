@@ -84,30 +84,9 @@ def merge_jsons(json1, json2):
 		kebele = value["Kebele"].lower()
 		# check if region already present
 		try:
-			severity_disease_dict[region]
-			# check if zone already present
-			try:
-				severity_disease_dict[region][zone]
-				# check if woreda is present
-				try:
-					severity_disease_dict[region][zone][woreda]
-					# check if kebele is present
-					try:
-						severity_disease_dict[region][zone][woreda][kebele].append({"disease": value["Disease"], "severity": value["Severity"], "growth stage": value["Growth Stage"]})
-					except:
-						severity_disease_dict[region][zone][woreda][kebele] = [{"disease": value["Disease"], "severity": value["Severity"], "growth stage": value["Growth Stage"]}]
-				except:
-					severity_disease_dict[region][zone][woreda] = {}
-					severity_disease_dict[region][zone][woreda][kebele] = [{"disease": value["Disease"], "severity": value["Severity"], "growth stage": value["Growth Stage"]}]
-			except:
-				severity_disease_dict[region][zone] = {}
-				severity_disease_dict[region][zone][woreda] = {}
-				severity_disease_dict[region][zone][woreda][kebele] = [{"disease": value["Disease"], "severity": value["Severity"], "growth stage": value["Growth Stage"]}]
+			severity_disease_dict[woreda] = {"disease": value["Disease"], "severity": value["Severity"], "growth stage": value["Growth Stage"], "variety": value["Varieties"]}
 		except:
-			severity_disease_dict[region] = {}
-			severity_disease_dict[region][zone] = {}
-			severity_disease_dict[region][zone][woreda] = {}
-			severity_disease_dict[region][zone][woreda][kebele] = [{"disease": value["Disease"], "severity": value["Severity"], "growth stage": value["Growth Stage"]}]
+			pass
 
 	# print(json.dumps(severity_disease_dict))
 	all_data = json1[0]["results"]
@@ -118,33 +97,28 @@ def merge_jsons(json1, json2):
 		zone = data["Zone"].lower()
 		woreda = data["Woreda"].lower()
 		kebele = data["Kebele"].lower()
-		da_bot_data = {"Name": data["Name"], "Phone_Number": data["Phone_Number"], "Father_s_Name": data["Father_s_Name"], "Kebele": data["Kebele"]}
+		da_bot_data = {"Name": data["Name"], "Phone_Number": data["Phone_Number"], "Father_s_Name": data["Father_s_Name"], "Kebele": data["Kebele"], "Salutation": data["Salutation"], "Woreda": data["Woreda"]}
 		try:
-			severity_disease_dict[region]
-			try:
-				severity_disease_dict[region][zone]
-				try:
-					severity_disease_dict[region][zone][woreda]
-					try:
-						da_bot_data["add_info"] = severity_disease_dict[region][zone][woreda][kebele]
-					except:
-						dat = severity_disease_dict[region][zone][woreda]
-						da_bot_data["add_info"] = list(dat.values())[0]
-				except:
-					dat = severity_disease_dict[region][zone]
-					da_bot_data["add_info"] = list(list(dat.values())[0].values())[0]
-			except:
-				dat = severity_disease_dict[region]
-				da_bot_data["add_info"] = list(list(list(dat.values())[0].values())[0].values())[0]
+			da_bot_data["add_info"] = severity_disease_dict[woreda]
 		except:
-			pass
-		da_data_list.append(da_bot_data)
+			da_bot_data = []
+		if da_bot_data != []:
+			da_data_list.append(da_bot_data)
 		# print(severity_disease_dict[region][zone][woreda][kebele])
 		# always create
+		comp_data_1 = {}
+		comp_data_2 = {}
+		with open("merged_data.json", "r") as ofs:
+			data = ofs.readlines()
+			comp_data_1 = json.loads(data[0])
 		with open("merged_data.json", "w+") as ofs:
 			ofs.write(json.dumps(da_data_list))
+		with open("merged_data.json", "r") as ofs:
+			data = ofs.readlines()
+			comp_data_2 = json.loads(data[0])
 	MERGE_STATUS = "Data merge completed"
-	call_telebots_wrb()
+	if comp_data_1 != comp_data_2:
+		call_telebots_wrb()
 
 # send message via telegram api
 def send_message_dva(name, chat_id):
