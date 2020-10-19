@@ -129,10 +129,18 @@ def detect_wheat_rust(update, context):
 
     return OPTIONS
 
+def option_control(update, context):
+    """Check farmer presence"""
+    reply_keyboard = [['Back']]
+    update.message.reply_text('Control should be considered if susceptible varieties are grown and disease is present (>10% of leaf area infected, >5% for stem rust). Early control to stop increased spread and further build-up of disease is very important.',
+                              reply_markup=ReplyKeyboardMarkup(reply_keyboard, one_time_keyboard=True))
+
+    return OPTIONS
+
 def detect_variety(update, context):
     """Check farmer presence"""
     reply_keyboard = [['Back']]
-    update.message.reply_text('Link - https://www.youtube.com/watch?v=7C_fhB3M17o&t=141s',
+    update.message.reply_text('Yellow rust severity recorded on varieties; Dambal (30S), Ogolcho (30S), Unknown (60S) while stem rust severity recorded on varieties Wane (5MS-S), Ogolcho (5S), Unknown (5S)',
                               reply_markup=ReplyKeyboardMarkup(reply_keyboard, one_time_keyboard=True))
 
     return OPTIONS
@@ -147,27 +155,26 @@ def apply_chemicals(update, context):
 
 def any_other_ques(update, context):
     """Check farmer presence"""
-    reply_keyboard = [['Back']]
-    update.message.reply_text('Link - https://www.youtube.com/watch?v=7C_fhB3M17o&t=141s',
-                              reply_markup=ReplyKeyboardMarkup(reply_keyboard, one_time_keyboard=True))
+    # reply_keyboard = [['Back']]
+    update.message.reply_text('Any Other Question')
 
-    return OPTIONS
+    return END_C
 
 def cancel(update, context):
     """cancel coversation"""
     user = update.message.from_user
     logger.info("User %s canceled the conversation.", user.first_name)
-    update.message.reply_text('Thanks for your time. If you wish to start the conversation again, please type start and send.', reply_markup=ReplyKeyboardRemove())
+    update.message.reply_text('Thanks for your time. If you wish to start the conversation again, please type /start and send.', reply_markup=ReplyKeyboardRemove())
 
     return ConversationHandler.END
 
 
 def end_conv(update, context):
     """end coversation"""
-    reply_keyboard = [['Yes', 'No']]
+    # reply_keyboard = [['Yes', 'No']]
     user = update.message.from_user
     logger.info("User %s completed the conversation.", user.first_name)
-    update.message.reply_text('If you find this information helpful and want to subscribe so as to receive messages every ten days, please press yes', reply_markup=ReplyKeyboardMarkup(reply_keyboard, one_time_keyboard=True))
+    update.message.reply_text('Thanks for your time. If you wish to start the conversation again, please type /start and send.', reply_markup=ReplyKeyboardRemove())
 
     return ConversationHandler.END
 
@@ -191,7 +198,7 @@ def main():
 
             ACTION: [MessageHandler(Filters.regex('^(Next)$'), control_action)],
 
-            OPTIONS: [MessageHandler(Filters.regex('^(Yes)$'), end_conv), MessageHandler(Filters.regex('^(Next)$'), option_action), MessageHandler(Filters.regex('^(Back)$'), option_action), MessageHandler(Filters.regex('^(Detecting wheat rust)$'), detect_wheat_rust), MessageHandler(Filters.regex('^(Variety)$'), detect_variety), MessageHandler(Filters.regex('^(Applying Chemials)$'), apply_chemicals), MessageHandler(Filters.regex('^(Any other question)$'), any_other_ques)],
+            OPTIONS: [MessageHandler(Filters.regex('^(Yes)$'), end_conv), MessageHandler(Filters.regex('^(Control)$'), option_control), MessageHandler(Filters.regex('^(Next)$'), option_action), MessageHandler(Filters.regex('^(Back)$'), option_action), MessageHandler(Filters.regex('^(Detecting wheat rust)$'), detect_wheat_rust), MessageHandler(Filters.regex('^(Variety)$'), detect_variety), MessageHandler(Filters.regex('^(Applying Chemials)$'), apply_chemicals), MessageHandler(Filters.regex('^(Any other question)$'), any_other_ques)],
 
             END_C: [MessageHandler(Filters.text & ~Filters.command, end_conv)]
 
