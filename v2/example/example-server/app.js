@@ -44,28 +44,40 @@ app.use( bodyParser.raw(options) );
 var wheat_data = ""
 var da_data = ""
 
+var flag_da = true
+var flag_wheat = true
+
 // indentify the json data and assign
 function identify_data(data){
   try{
     data = JSON.parse(data)
-    if (data["next"]===null && da_data===""){
-      da_data = [data]
-      console.log('in if part')
+    // console.log(data, "identify")
+    if (data["next"]===null){
+    if(flag_da){
+        da_data = [data]
+        console.log("received da data")
+        flag_da = false
     }
-    else if(wheat_data==="" && data.length > 0){
-      wheat_data = data
-      console.log(wheat_data)
+      //console.log('in if part')
+    }
+    else if(data.length > 0){
+    if(flag_wheat){
+        wheat_data = data
+        console.log("received wheat data")
+        flag_wheat = false
+    }
+      //console.log(wheat_data)
     }
   }
   catch(e){
-    console.log(e, "error")
+    console.log(e, "error22222")
   }
 };
 
 // Start REST endpoint /temp
 app.post('/temp', function (req, res) {
   temp = req.body.toString()
-  console.log(temp)
+  console.log(temp, "data in here")
   identify_data(temp);
   // console.log("wheat data", wheat_data, "---", "da data", da_data, "---")
   // trigger only if both data are valid
@@ -147,6 +159,8 @@ function merge_data(DaData, wheat_data){
           console.log(body,"+++++");
           da_data = "";
           wheat_data = "";
+          flag_da = true
+          flag_wheat = true
   });
 };
 

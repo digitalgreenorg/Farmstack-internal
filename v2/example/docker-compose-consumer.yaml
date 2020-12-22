@@ -54,7 +54,7 @@ services:
     volumes:
       - ./con-app/app:/app
     command: >
-      sh -c "python merge_api.py & python wheat_rust_bot.py & python da_verification.py"
+      sh -c "python merge_api_v2.py & python wheat_rust_bot_v2.py & python da_verification.py"
     networks:
       - consumer-internal
 
