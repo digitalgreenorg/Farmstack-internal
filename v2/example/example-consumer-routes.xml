@@ -17,23 +17,19 @@
     </camel:trustManagers>
   </camel:sslContextParameters>
 
-  <camel-cxf:cxfEndpoint id="testEndpoint" address="http://consumer-app:8081/temp">
-    <camel-cxf:properties>
-      <entry key="dataFormat" value="MESSAGE"/>
-      <!--  enable mtom by setting this property to true -->
-      <entry key="mtom-enabled" value="true"/>
-    </camel-cxf:properties>
-  </camel-cxf:cxfEndpoint>
-
   <!-- Routes -->
   <camelContext xmlns="http://camel.apache.org/schema/blueprint">
     <!-- Retrieve temperature value from IDS protocol, setting remote attestation to most relaxed config (for
           demo only. Use 1 in production). Forward to Data App 2 -->
     <route id="receiveData">
-      <from
-        uri="idsserver://0.0.0.0:9292/?sslContextParameters=#serverSslContext&amp;attestation=0"/>
-      <log message="Received via IDS protocol: ${body}"/>
-      <to uri="testEndpoint"/>
+      <from uri="idscp2server://0.0.0.0:29292?sslContextParameters=#serverSslContext&amp;useIdsMessages=false"/>
+      <setHeader name="Content-Type">
+        <constant>application/json</constant>
+      </setHeader>
+      <to uri="http://consumer-app:8081/temp"/>
+
     </route>
+
+    
   </camelContext>
 </blueprint>
