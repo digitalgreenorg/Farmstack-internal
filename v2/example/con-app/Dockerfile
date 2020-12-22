@@ -15,5 +15,5 @@ COPY ./app /app
 RUN adduser -D user
 USER user
 
-# CMD ["sh", "-c", "python merge_api.py & python wheat_rust_bot.py & python da_verification.py"]
-CMD ["python", "merge_api.py"]
+CMD ["sh", "-c", "python merge_api.py & python wheat_rust_bot.py & python da_verification.py"]
+# CMD ["python", "merge_api.py"]
