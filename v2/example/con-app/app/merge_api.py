@@ -7,12 +7,75 @@ import requests
 
 print("---merge_api--")
 
+# PREV_JSON = ""
+FILE_DATA = "No file data"
+MERGE_STATUS = "Waiting to merge"
+TELEGRAM_STATUS = "Not sending data, waiting for file"
+
+class JSONEncoder(json.JSONEncoder):
+	def default(self, o):
+		if isinstance(o, ObjectId):
+			return str(o)
+		return json.JSONEncoder.default(self, o)
+
+def parse_json2(json2):
+	data = []
+	json2 = json2.replace("}]", "").replace('[', '').replace('{', '').replace(']','')
+	for val in json2.split('},'):
+		temp_dict = {}
+		for v in val.split(', '):
+			try:
+				key, val1 = v.split('=')
+				prev = key.strip()
+				temp_dict[key.strip()] = val1.strip()
+			except:
+				# key, val, val1 = v.split('=')
+				# val += val1
+				# print(prev, v.strip())
+				temp_dict[prev] += ', ' + v.strip()
+		data.append(temp_dict)
+	return data
+
+
+def detect_change(json2):
+	# global PREV_JSON
+	# print(PREV_JSON, json2)
+	try:
+		with open("prev_json.json", "r") as ofs:
+			data = json.loads(ofs.readlines()[0])
+			if data == json2:
+				print("same data received")
+				return False
+			else:
+				print("in if case", json2)
+				with open("prev_json.json", "w") as ofs:
+					ofs.write(json.dumps(json2))
+				return True
+	except:
+		with open("prev_json.json", "w") as ofs:
+			ofs.write(json.dumps(json2))
+		return True
+
 def merge_jsons(json1, json2):
+	global MERGE_STATUS
+	global FILE_DATA
+	FILE_DATA = "Files received"
+	# print(json1, json2)
+
+	# if not detect_change(json2):
+	# 	return False
+	try:
+		if json2[0]["Status"] == "No change":
+			return False
+	except:
+		print("merging data now")
 
 	merge_cols = ['Region', 'Zone', 'Woreda', 'Kebele']
 	data_fromda = ['Name', 'Phone_Number', 'Father_s_Name', 'Kebele']
 
 	severity_disease_dict = {}
+
+	print("merging", json1, json2)
 
 	for value in json2:
 		region = value["Region"].lower()
@@ -80,6 +143,7 @@ def merge_jsons(json1, json2):
 		# always create
 		with open("merged_data.json", "w+") as ofs:
 			ofs.write(json.dumps(da_data_list))
+	MERGE_STATUS = "Data merge completed"
 	call_telebots_wrb()
 
 # send message via telegram api
@@ -98,8 +162,8 @@ def send_message_wrb(name, chat_id):
 
 def call_telebots_dva():
 	# {"name": "sagar singh", "chat_id": 817454976} {"chat_id": 1093201488, "name": "razak"}
-	# conf_data = [{"name": "sujit", "chat_id": 695935397}, {"name": "vineet", "chat_id": 742873817}, {"name": "sagar singh", "chat_id": 817454976}, {"chat_id": 1093201488, "name": "razak"}]
-	conf_data = [{"name": "sagar singh", "chat_id": 817454976}, {"name": "sujit", "chat_id": 695935397}]
+	conf_data = [{"name": "sujit", "chat_id": 695935397}, {"name": "vineet", "chat_id": 742873817}, {"name": "sagar singh", "chat_id": 817454976}, {"chat_id": 1093201488, "name": "razak"}]
+	#conf_data = [{"name": "sagar singh", "chat_id": 817454976}, {"name": "sujit", "chat_id": 695935397}]
 	da_data_list = []
 	with open("merged_data.json", "r") as ofs:
 		da_data_list = json.loads(ofs.readlines()[0])
@@ -110,11 +174,14 @@ def call_telebots_dva():
 				for conf_d in conf_data:
 					if val.lower() in conf_d["name"].lower():
 						send_message_dva(val, conf_d["chat_id"])
+	return True
 
 def call_telebots_wrb():
+	global TELEGRAM_STATUS
+	TELEGRAM_STATUS = "Messages sent via telegram"
 	# {"name": "sagar singh", "chat_id": 817454976}
-	# conf_data = [{"name": "sujit", "chat_id": 695935397}, {"name": "vineet", "chat_id": 742873817}, {"name": "sagar singh", "chat_id": 817454976}, {"chat_id": 1093201488, "name": "razak"}]
-	conf_data = [{"name": "sagar singh", "chat_id": 817454976}, {"name": "sujit", "chat_id": 695935397}]
+	conf_data = [{"name": "sujit", "chat_id": 695935397}, {"name": "vineet", "chat_id": 742873817}, {"name": "sagar singh", "chat_id": 817454976}, {"chat_id": 1093201488, "name": "razak"}]
+	#conf_data = [{"name": "sagar singh", "chat_id": 817454976}, {"name": "sujit", "chat_id": 695935397}]
 	da_data_list = []
 	with open("merged_data.json", "r") as ofs:
 		da_data_list = json.loads(ofs.readlines()[0])
@@ -133,18 +200,52 @@ class MainHandler(tornado.web.RequestHandler):
 	
 	def post(self):
 		req_data = json.loads(self.request.body)
-		# Output data to check correct operation
-		# TODO: DISABLE for productive use!!! (data leak)
-		print(req_data)
-		merge_jsons(req_data["data1"], req_data["data2"])
-		self.write("Processed")
+		print("request received")
+		if merge_jsons(req_data["data1"], req_data["data2"]):
+			self.write("Processed")
+		else:
+			global FILE_DATA
+			global MERGE_STATUS
+			global TELEGRAM_STATUS
+			FILE_DATA = "No file data"
+			MERGE_STATUS = "Waiting to merge"
+			TELEGRAM_STATUS = "Not sending data, waiting for file"
+			self.write("No Change detected")
+
+
+class JsonFormatter(tornado.web.RequestHandler):
+	def get(self):
+		self.write("No get methods")
+	
+	def post(self):
+		req_data = json.dumps(parse_json2(str(self.request.body)))
+		self.write(JSONEncoder().encode(req_data))
+		self.finish()
+
+
+class StatusUpdater(tornado.web.RequestHandler):
+	def get(self):
+		self.write("No get methods")
+	
+	def post(self):
+		global FILE_DATA
+		global MERGE_STATUS
+		global TELEGRAM_STATUS
+		self.write(JSONEncoder().encode(json.dumps({"File": FILE_DATA, "Merge": MERGE_STATUS, "Telegram": TELEGRAM_STATUS})))
+		# FILE_DATA = "No file data"
+		# MERGE_STATUS = "Waiting to merge"
+		# TELEGRAM_STATUS = "Not sending data, waiting for file"
+		self.finish()
 
 def make_app():
 	return tornado.web.Application([
 		(r"/", MainHandler),
+		(r"/format/", StatusUpdater),
+		(r"/get_updates/", StatusUpdater)
 	])
 
 if __name__ == "__main__":
 	app = make_app()
 	app.listen(8888)
 	tornado.ioloop.IOLoop.current().start()
+

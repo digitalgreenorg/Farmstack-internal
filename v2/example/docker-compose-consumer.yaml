@@ -13,27 +13,35 @@ services:
       - ../cert-stores/truststore.p12:/root/etc/truststore.p12
       - ./example-consumer-routes.xml:/root/deploy/example-consumer-routes.xml
     # Enable this port mappings for debugging or UI access from localhost
-#    ports:
+    ports:
 #      - "5005:5005"
 #      - "8181:8181"
 #      - "8443:8443"
+    # Enable this port mapping (along with "ports:" above) to allow access to IDSCP from outside the ids-wide network
+      - "29292:29292"
     networks:
       - ids-wide
       - consumer-internal
 
+  # Data App (REST consumer, displays web page)
   consumer-app:
-    build:
-      context: ./example-server
+    image: fraunhoferaisec/example-server:${EXAMPLE_TAG:-develop}
+    entrypoint: ["/bin/sh", "-c", "npm install request express convert-csv-to-json && node app.js"]
+    volumes:
+      - ./example-server/app.js:/app/app.js
     ports:
       - "8081:8081"
     networks:
       - consumer-internal
-
   api-app:
     build:
       context: ./con-app/
     ports:
       - "8888:8888"
+    volumes:
+      - ./con-app/app:/app
+    command: >
+      sh -c "python merge_api_v2.py & python wheat_rust_bot_v2.py & python da_verification.py"
     networks:
       - consumer-internal
 
