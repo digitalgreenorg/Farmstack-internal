@@ -1,68 +1,38 @@
-/*
-  Example of a very simple REST consumer app.
+const bodyParser = require('body-parser');
+const express = require('express');
+const request = require('request');
 
-  This app accepts sensor values from POST requests to 
-  http://<host>:8081/temp
-  and displays them under
-  http://<host>:8081/
-  
-  For demonstration purposes only.
+const app = express();
+app.use(bodyParser.json({limit: '1mb'}));
 
-  (C) Fraunhofer AISEC, 2017
-*/
-var temp = 0
-
-// Start REST server
-var express = require('express')
-  , app = express()
-
-let csvToJson = require('convert-csv-to-json');
-
-var request = require('request');
-
-var DaData = []
-// just use raw body data
-var bodyParser = require('body-parser')
-var options = {
-  inflate: true,
-  limit: '10kb',
-  type: 'text/xml'
-};
-app.use( bodyParser.raw(options) );
+// var DaData = []
 
 // Start REST endpoint /temp
 app.post('/temp', function (req, res) {
-  temp = req.body
-  console.log('received temp ' + temp)
-  da_data();
-  res.end('OK')
-})
-
-// Start web page /
-app.get('/', function (req, res, next) {
-  try {
-    var html = '<html><body><h1>Temp '+Number(temp).toFixed(2)+'</h1><script>function refresh () {window.location.reload(true);}; window.setTimeout(refresh, 1000);</script></body></html>'
-    res.send(html)
-  } catch (e) {
-    next(e)
-  }
-})
+  merge_data(req.body);
+  res.end('OK');
+});
 
 // get da data
-function da_data(){
-  var da_data = {}
-  request('https://testdadmin.digitalgreen.org/api/v2/assets/aVzzVRBh6horqqawq4pNSS/data.json/',
-    { json: true},
-      function(err, res, body) {
-        DaData = [res];
-        console.log(res);
-  });
+function da_data(postBody) {
+  // TODO: What is this supposed to do???
+  // The linked JSON file is not present, and the res object is not the resulting data.
+
+  // request('https://testdadmin.digitalgreen.org/api/v2/assets/aVzzVRBh6horqqawq4pNSS/data.json/',
+  //   { json: true },
+  //   function (err, res, body) {
+  //     DaData = res;
+  //     console.log(res);
+  //   });
   merge_data();
 }
 
-function merge_data(){
+function merge_data(postData) {
+  // Output our converted wheat data
+  console.log("POST data:");
+  console.log(postData);
   // read csv file and convert to json
-  let wheat_data = [
+  const wheatData = [
     {
       "Year": 2020,
       "Disease": "Yellow Rust / Stripe Rust",
@@ -813,17 +783,13 @@ function merge_data(){
       "Language / Translation": "",
       "Extra infoamation": ""
     }
-  ]
-  var reqData = {"data1": DaData, "data2" : wheat_data};
-  request('https://api-app:8088/',
-    { json: true, body: requestData },
-      function(err, res, body) {
-        console.log(res);
-  });
+  ];
+  const reqData = { "data1": postData, "data2": wheatData };
+  request('http://api-app:8888/', { json: true, body: reqData });
 };
 
-var server = app.listen(8081, function () {
-  var host = server.address().address
-  var port = server.address().port
+const server = app.listen(8081, function () {
+  const host = server.address().address
+  const port = server.address().port
   console.log("REST API listening at http://%s:%s", host, port)
-})
+});

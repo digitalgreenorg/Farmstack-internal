@@ -1,6 +1,2 @@
-This example demonstrates the conversion of MQTT messages (using Eclipse Paho)
-and publishing via a web interface using the Trusted Connector.
-
-Documentation is located at https://industrial-data-space.github.io/trusted-connector-documentation/docs/rest/
-
-(c) Fraunhofer AISEC 2018
+Send data to the provider with the following `wget` command:
+`wget -O- --post-file Wheatqualitycertification_MonitoringSample.csv --header "Content-Type: text/csv" http://localhost:8989/postCsv`

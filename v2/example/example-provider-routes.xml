@@ -22,31 +22,29 @@
 
   <!-- Routes -->
   <camelContext xmlns="http://camel.apache.org/schema/blueprint">
+
     <restConfiguration component="jetty" bindingMode="off" port="8989" enableCORS="true"/>
-    <!-- defines the rest services using the context-path /user -->
-    <rest path="/postUSImg">
-      <description>User rest service</description>
+    
+    <rest path="/postCsv">
       <post>
         <to uri="direct:update"/>
       </post>
     </rest>
 
-
-    <!-- Retrieve temperature value from Data App via HTTP GET request and forward it over secure IDS protocol,
-          setting remote attestation to most relaxed config (for demo only. Use 1 in production )-->
     <route id="sendData">
-      <!--<from uri="direct:update"/>-->
-      <from uri="file://deploy/?fileName=Wheatqualitycertification_short.csv&amp;charset=utf-8&amp;noop=true"/>
-      <!--<convertBodyTo type="java.io.InputStream"/>-->
+      <from uri="direct:update"/>
+      <!-- <from uri="file://deploy/?fileName=Wheatqualitycertification_MonitoringSample.csv&amp;charset=utf-8&amp;noop=true"/> -->
       <unmarshal>
-        <csv delimiter=","  useMaps="true" />
+        <csv delimiter="," useMaps="true"/>
       </unmarshal>
-      <log message="unmarshalled: ${body.class.name} ${body}" loggingLevel="WARN"/>
-
-      <!--<marshal>
-        <base64/>
-      </marshal>-->
-      <to uri="idsclient://consumer-core:9292/?sslContextParameters=#clientSslContext&amp;attestation=0"/>
+      <marshal>
+        <json/>
+      </marshal>
+      <to uri="idscp2client://consumer-core:29292?awaitResponse=true&amp;sslContextParameters=#clientSslContext&amp;useIdsMessages=false"/>
+      <setHeader name="Content-Type">
+        <constant>text/plain</constant>
+      </setHeader>
     </route>
   </camelContext>
+
 </blueprint>
