@@ -1,6 +1,18 @@
-This example demonstrates the conversion of MQTT messages (using Eclipse Paho)
-and publishing via a web interface using the Trusted Connector.
+- ### Farmstack Architecture : A secure workspace
 
-Documentation is located at https://industrial-data-space.github.io/trusted-connector-documentation/docs/rest/
+<img src="block_diagram.png"  height="400">
 
-(c) Fraunhofer AISEC 2018
+#### Data Source - Wheat Rust
+</br>
+
+<img src="wheat_rust.png"  height="400">
+
+</br>
+
+#### Data Source - DA 
+</br>
+<img src="da_registry.png"  height="400">
+</br>
+
+
+
