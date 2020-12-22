@@ -47,7 +47,7 @@ def merge_jsons(json1, json2):
 			severity_disease_dict[region][zone][woreda][kebele] = [{"disease": value["Disease"], "severity": value["Severity"], "growth stage": value["Growth Stage"]}]
 
 	# print(json.dumps(severity_disease_dict))
-	all_data = json1[0]["results"]
+	all_data = json1["results"]
 	da_data_list = []
 	for data in all_data:
 		# print(type(data))
@@ -133,6 +133,9 @@ class MainHandler(tornado.web.RequestHandler):
 	
 	def post(self):
 		req_data = json.loads(self.request.body)
+		# Output data to check correct operation
+		# TODO: DISABLE for productive use!!! (data leak)
+		print(req_data)
 		merge_jsons(req_data["data1"], req_data["data2"])
 		self.write("Processed")
 

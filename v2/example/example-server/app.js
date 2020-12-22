@@ -28,9 +28,10 @@ function da_data(postBody) {
 }
 
 function merge_data(postData) {
-  // Output our converted wheat data
-  console.log("POST data:");
-  console.log(postData);
+  // Output converted wheat quality data
+  // console.log("POST data:");
+  // console.log(postData);
+
   // read csv file and convert to json
   const wheatData = [
     {
@@ -785,7 +786,7 @@ function merge_data(postData) {
     }
   ];
   const reqData = { "data1": postData, "data2": wheatData };
-  request('http://api-app:8888/', { json: true, body: reqData });
+  request.post('http://api-app:8888/', { json: true, body: reqData });
 };
 
 const server = app.listen(8081, function () {
