@@ -25,9 +25,9 @@ services:
 
   # Data App (REST consumer, displays web page)
   consumer-app:
-
-    build: 
-      context: ./example-server
+    image: demo-app
+    # build: 
+    #   context: ./example-server
     ports:
       - "8081:8081"
     networks:
@@ -35,7 +35,7 @@ services:
     
   api-app:
     build:
-      context: ./con-app/
+      context: ./con-app
     ports:
       - "8888:8888"
     networks:

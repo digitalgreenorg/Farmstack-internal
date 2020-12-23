@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <blueprint xmlns="http://www.osgi.org/xmlns/blueprint/v1.0.0"
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xmlns:camel="http://camel.apache.org/schema/blueprint"
-  xsi:schemaLocation="
+  xmlns:camel="http://camel.apache.org/schema/blueprint" xsi:schemaLocation="
  http://www.osgi.org/xmlns/blueprint/v1.0.0 http://www.osgi.org/xmlns/blueprint/v1.0.0/blueprint.xsd
  http://camel.apache.org/schema/blueprint http://camel.apache.org/schema/blueprint/camel-blueprint.xsd">
 
@@ -16,14 +15,15 @@
     </camel:trustManagers>
   </camel:sslContextParameters>
 
-  <camel:dataFormats>
-    <camel:json id="jack" library="Jackson" prettyPrint="true"/>
-  </camel:dataFormats>
+  <bean id="TypeExtractionProcessor" class="de.fhg.aisec.ids.camel.idscp2.processors.IdsMessageTypeExtractionProcessor" />
+  <bean id="ContractOfferCreationProcessor" class="de.fhg.aisec.ids.camel.idscp2.processors.ContractOfferCreationProcessor" />
+  <bean id="ContractAgreementReceiverProcessor" class="de.fhg.aisec.ids.camel.idscp2.processors.ContractAgreementReceiverProcessor" />
+  <bean id="ResourceUpdateCreationProcessor" class="de.fhg.aisec.ids.camel.idscp2.processors.ResourceUpdateCreationProcessor" />
 
-  <!-- Routes -->
   <camelContext xmlns="http://camel.apache.org/schema/blueprint">
+
     <restConfiguration component="jetty" bindingMode="off" port="8989" enableCORS="true"/>
-    <!-- defines the rest services using the context-path /user -->
+
     <rest path="/postUSImg">
       <description>User rest service</description>
       <post>
@@ -31,8 +31,34 @@
       </post>
     </rest>
 
-    <!-- Retrieve temperature value from Data App via HTTP GET request and forward it over secure IDS protocol,
-          setting remote attestation to most relaxed config (for demo only. Use 1 in production )-->
+    <route>
+      <from uri="timer://contractRequest?repeatCount=1" />
+      <setProperty name="artifactUri">
+        <constant>https://www.digitalgreen.org/wheatCsv</constant>
+      </setProperty>
+      <setProperty name="containerUri">
+        <constant>https://private.docker.image/sha256-e1286554f18c0f38edc9dddaa60a328a955e583dde4b42a7b4595bd1d1a1e44b#8081</constant>
+      </setProperty>
+      <process ref="ContractOfferCreationProcessor" />
+      <to uri="idscp2client://consumer-core:29292?awaitResponse=true&amp;connectionShareId=ucConnection&amp;sslContextParameters=#clientSslContext&amp;useIdsMessages=true"/>
+      <process ref="TypeExtractionProcessor"/>
+      <choice>
+        <when>
+          <simple>${exchangeProperty.ids-type} == 'ContractAgreementMessage'</simple>
+          <log message="### Handle ContractAgreementMessage ###"/>
+          <!-- Only processing of incoming request must be performed, no reply -->
+          <process ref="ContractAgreementReceiverProcessor"/>
+        </when>
+        <otherwise>
+          <log loggingLevel="ERROR" message="Expected ContractAgreementMessage, but received:\n${body}\n### Header: ###\n${headers[idscp2-header]}"/>
+        </otherwise>
+      </choice>
+      <removeHeader headerName="idscp2-header" />
+      <setBody>
+        <simple>${null}</simple>
+      </setBody>
+    </route>
+
     <route id="sendData">
       <from uri="direct:update"/>
       <!-- <from uri="file://deploy/?fileName=Wheatqualitycertification_short.csv&amp;charset=utf-8&amp;noop=true"/> -->
@@ -44,11 +70,17 @@
       <marshal>
         <json/>
       </marshal>
-      <to uri="idscp2client://consumer-core:29292?awaitResponse=true&amp;sslContextParameters=#clientSslContext&amp;useIdsMessages=false"/>
+      <setProperty name="artifactUri">
+        <constant>https://www.digitalgreen.org/wheatCsv</constant>
+      </setProperty>
+      <process ref="ResourceUpdateCreationProcessor" />
+      <to uri="idscp2client://consumer-core:29292?awaitResponse=true&amp;connectionShareId=ucConnection&amp;sslContextParameters=#clientSslContext&amp;useIdsMessages=true"/>
       <!-- Sets the correct header for the text answer "OK" -->
       <setHeader name="Content-Type">
         <constant>text/plain</constant>
       </setHeader>
     </route>
+
   </camelContext>
+
 </blueprint>

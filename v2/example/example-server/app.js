@@ -4,20 +4,7 @@ const bodyParser = require('body-parser');
 const request = require('request');
 
 const app = express();
-
-const options_da = {
-  url: 'https://testdadmin.digitalgreen.org/api/v2/assets/aVzzVRBh6horqqawq4pNSS/data.json',
-  headers: {
-    'Authorization': 'Token a5a9824dcd5a1b07b3178be67bdfc73788f77d42'
-  },
-  json: true
-};
-
-const options_merge = {
-  url: 'http://api-app:8888/'
-};
-
-// just use JSON body data
+// Automatically parse JSON bodies up to 100MB
 app.use(bodyParser.json({
   inflate: true,
   limit: '100mb'
@@ -76,7 +63,7 @@ app.post('/temp', function (req, res) {
   res.end('OK');
 })
 
-// Start web page /
+// Just some HTML for visiting browsers at root /
 app.get('/', function (req, res) {
   try {
     var html = '<html><body><h1>Consumer App</h1></body></html>';
@@ -88,15 +75,16 @@ app.get('/', function (req, res) {
 
 function merge_data(wheat_data) {
   console.log("in merge data");
-  var reqData = { "data1": da_data, "data2": wheat_data };
-  var headersOpt = {
-    "content-type": "application/json",
-  };
   request({
     method: 'post',
     url: 'http://api-app:8888/',
-    body: reqData,
-    headers: headersOpt,
+    body: {
+      "data1": da_data,
+      "data2": wheat_data
+    },
+    headers: {
+      "content-type": "application/json",
+    },
     json: true,
   }, function (error, response, body) {
     console.log(body, "+++++");
