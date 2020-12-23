@@ -6,27 +6,28 @@ const request = require('request');
 const app = express();
 
 const options_da = {
-  url: 'https://testdadmin.digitalgreen.org/api/v2/assets/aVzzVRBh6horqqawq4pNSS/data.json/',
+  url: 'https://testdadmin.digitalgreen.org/api/v2/assets/aVzzVRBh6horqqawq4pNSS/data.json',
   headers: {
     'Authorization': 'Token a5a9824dcd5a1b07b3178be67bdfc73788f77d42'
-  }
+  },
+  json: true
 };
 
 const options_merge = {
   url: 'http://api-app:8888/'
 };
 
-// just use raw body data
+// just use JSON body data
 app.use(bodyParser.json({
   inflate: true,
-  limit: '100mb',
+  limit: '100mb'
 }));
 
-var wheat_data = ""
-var da_data = ""
+var wheat_data = "";
+var da_data = "";
 
-var flag_da = true
-var flag_wheat = true
+var flag_da = true;
+var flag_wheat = true;
 
 // indentify the json data and assign
 function identify_data(data) {
@@ -63,7 +64,7 @@ app.post('/temp', function (req, res) {
   // trigger only if both data are valid
   if (wheat_data != "") {
     if (da_data != "") {
-      merge_data(da_data, wheat_data);
+      merge_data();
     }
     else {
       console.log("waiting for file 2");
@@ -72,22 +73,22 @@ app.post('/temp', function (req, res) {
   else {
     console.log("waiting for file 1");
   }
-  res.end('OK')
+  res.end('OK');
 })
 
 // Start web page /
 app.get('/', function (req, res) {
   try {
-    var html = '<html><body><h1>Consumer App</h1></body></html>'
-    res.send(html)
+    var html = '<html><body><h1>Consumer App</h1></body></html>';
+    res.send(html);
   } catch (e) {
-    console.log(e)
+    console.log(e);
   }
-})
+});
 
-function merge_data(daData, wheat_data) {
+function merge_data(wheat_data) {
   console.log("in merge data");
-  var reqData = { "data1": daData, "data2": wheat_data };
+  var reqData = { "data1": da_data, "data2": wheat_data };
   var headersOpt = {
     "content-type": "application/json",
   };
@@ -101,13 +102,13 @@ function merge_data(daData, wheat_data) {
     console.log(body, "+++++");
     da_data = "";
     wheat_data = "";
-    flag_da = true
-    flag_wheat = true
+    flag_da = true;
+    flag_wheat = true;
   });
 };
 
 var server = app.listen(8081, function () {
-  var host = server.address().address
-  var port = server.address().port
-  console.log("REST API listening at http://%s:%s", host, port)
-})
+  var host = server.address().address;
+  var port = server.address().port;
+  console.log("REST API listening at http://%s:%s", host, port);
+});
