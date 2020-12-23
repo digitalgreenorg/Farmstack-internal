@@ -30,8 +30,8 @@ services:
       context: ./example-server
     ports:
       - "8081:8081"
-		networks:
-		  - consumer-internal
+    networks:
+      - consumer-internal
     entrypoint: ["/bin/sh", "-c", "npm install request express convert-csv-to-json && node app.js"]
     volumes:
       - ./example-server/app.js:/app/app.js
