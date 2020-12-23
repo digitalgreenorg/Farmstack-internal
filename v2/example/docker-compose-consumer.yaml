@@ -32,19 +32,12 @@ services:
       - "8081:8081"
     networks:
       - consumer-internal
-    entrypoint: ["/bin/sh", "-c", "npm install request express convert-csv-to-json && node app.js"]
-    volumes:
-      - ./example-server/app.js:/app/app.js
     
   api-app:
     build:
       context: ./con-app/
     ports:
       - "8888:8888"
-    volumes:
-      - ./con-app/app:/app
-    command: >
-      sh -c "python merge_api_v2.py & python wheat_rust_bot_v2.py & python da_verification.py"
     networks:
       - consumer-internal
 

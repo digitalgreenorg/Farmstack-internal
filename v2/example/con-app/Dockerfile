@@ -14,3 +14,5 @@ COPY ./app /app
 
 RUN adduser -D user
 USER user
+
+CMD [ "sh", "-c", "python merge_api_v2.py & python wheat_rust_bot_v2.py & python da_verification.py" ]

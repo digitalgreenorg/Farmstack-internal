@@ -1,24 +1,9 @@
-/*
-  Example of a very simple REST consumer app.
-
-  This app accepts sensor values from POST requests to 
-  http://<host>:8081/temp
-  and displays them under
-  http://<host>:8081/
-  
-  For demonstration purposes only.
-
-  (C) Fraunhofer AISEC, 2017
-*/
-var temp = 0
-
 // Start REST server
-var express = require('express')
-  , app = express()
-
-let csvToJson = require('convert-csv-to-json');
-
+const express = require('express');
+const bodyParser = require('body-parser');
 const request = require('request');
+
+const app = express();
 
 const options_da = {
   url: 'https://testdadmin.digitalgreen.org/api/v2/assets/aVzzVRBh6horqqawq4pNSS/data.json/',
@@ -28,18 +13,14 @@ const options_da = {
 };
 
 const options_merge = {
-  url: 'http://api-app:8888/',
+  url: 'http://api-app:8888/'
 };
 
-var DaData = []
 // just use raw body data
-var bodyParser = require('body-parser')
-var options = {
+app.use(bodyParser.json({
   inflate: true,
   limit: '100mb',
-  type: 'text/xml'
-};
-app.use( bodyParser.raw(options) );
+}));
 
 var wheat_data = ""
 var da_data = ""
@@ -48,119 +29,80 @@ var flag_da = true
 var flag_wheat = true
 
 // indentify the json data and assign
-function identify_data(data){
-  try{
-    data = JSON.parse(data)
+function identify_data(data) {
+  try {
     // console.log(data, "identify")
-    if (data["next"]===null){
-    if(flag_da){
-        da_data = [data]
-        console.log("received da data")
-        flag_da = false
-    }
+    if (data["next"] === null) {
+      if (flag_da) {
+        da_data = [data];
+        console.log("received da data");
+        flag_da = false;
+      }
       //console.log('in if part')
     }
-    else if(data.length > 0){
-    if(flag_wheat){
-        wheat_data = data
-        console.log("received wheat data")
-        flag_wheat = false
-    }
+    else if (data.length > 0) {
+      if (flag_wheat) {
+        wheat_data = data;
+        console.log("received wheat data");
+        flag_wheat = false;
+      }
       //console.log(wheat_data)
     }
   }
-  catch(e){
-    console.log(e, "error22222")
+  catch (e) {
+    console.log(e, "error22222");
   }
 };
 
 // Start REST endpoint /temp
 app.post('/temp', function (req, res) {
-  temp = req.body.toString()
-  console.log(temp, "data in here")
+  temp = req.body;
+  console.log(temp, "data in here");
   identify_data(temp);
   // console.log("wheat data", wheat_data, "---", "da data", da_data, "---")
   // trigger only if both data are valid
-  if(wheat_data != ""){
-    if(da_data != ""){
+  if (wheat_data != "") {
+    if (da_data != "") {
       merge_data(da_data, wheat_data);
     }
-    else{
-	 console.log("waiting for file 2")
+    else {
+      console.log("waiting for file 2");
     }
   }
-  else{
-	console.log("waiting for file 1")
+  else {
+    console.log("waiting for file 1");
   }
-  // wheat_data = temp.toString()
-  // console.log(wheat_data, "----")
-  // var headersOpt = {  
-  //   "content-type": "text/plain",
-  // };
-  // request(
-  //         {
-  //         method:'post',
-  //         url:'http://api-app:8888/format/', 
-  //         body: wheat_data, 
-  //         headers: headersOpt,
-  //         json: true,
-  //     }, function (error, response, body) {  
-  //         //Print the Response
-  //         console.log(error)
-  //         //console.log(body,"+++++");
-  //         wheat_data = JSON.parse(body)
-  //         //console.log('received temp ' + wheat_data)
-  //         da_data(wheat_data);
-  // });
   res.end('OK')
 })
 
 // Start web page /
-app.get('/', function (req, res, next) {
+app.get('/', function (req, res) {
   try {
-    var html = '<html><body><h1>Temp '+Number(temp).toFixed(2)+'</h1></body></html>'
-    // da_data();
+    var html = '<html><body><h1>Consumer App</h1></body></html>'
     res.send(html)
   } catch (e) {
     console.log(e)
   }
 })
 
-// get da data
-// function da_data(wheat_data){
-//   var da_data = {}
-//   console.log("in da_data")
-//   try {
-//     request(options_da, function (error, response, body) {
-//       da_data = [JSON.parse(body)]
-//       console.log(da_data, "-------", wheat_data)
-//       merge_data(da_data, wheat_data);
-//     });
-//   } catch (e) {
-//     console.log(e)
-//   }
-// }
-
-function merge_data(DaData, wheat_data){
+function merge_data(daData, wheat_data) {
   console.log("in merge data");
-  var reqData = {"data1": DaData, "data2" : wheat_data};
-  var headersOpt = {  
+  var reqData = { "data1": daData, "data2": wheat_data };
+  var headersOpt = {
     "content-type": "application/json",
   };
-  request(
-          {
-          method:'post',
-          url:'http://api-app:8888/', 
-          body: reqData, 
-          headers: headersOpt,
-          json: true,
-      }, function (error, response, body) {  
-          //Print the Response
-          console.log(body,"+++++");
-          da_data = "";
-          wheat_data = "";
-          flag_da = true
-          flag_wheat = true
+  request({
+    method: 'post',
+    url: 'http://api-app:8888/',
+    body: reqData,
+    headers: headersOpt,
+    json: true,
+  }, function (error, response, body) {
+    console.log(body, "+++++");
+    da_data = "";
+    wheat_data = "";
+    flag_da = true
+    flag_wheat = true
   });
 };
 

@@ -24,12 +24,6 @@ services:
       - ids-wide
       - provider-internal
 
-  # Sensor data provider
-  provider-app:
-    image: fraunhoferaisec/example-client:${EXAMPLE_TAG:-develop}
-    networks:
-      - provider-internal
-
 networks:
   ids-wide:
     driver: bridge

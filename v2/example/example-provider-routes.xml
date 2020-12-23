@@ -31,27 +31,24 @@
       </post>
     </rest>
 
-
     <!-- Retrieve temperature value from Data App via HTTP GET request and forward it over secure IDS protocol,
           setting remote attestation to most relaxed config (for demo only. Use 1 in production )-->
     <route id="sendData">
       <from uri="direct:update"/>
       <!-- <from uri="file://deploy/?fileName=Wheatqualitycertification_short.csv&amp;charset=utf-8&amp;noop=true"/> -->
-      
+      <!-- Parses CSV -->
       <unmarshal>
         <csv delimiter="," useMaps="true"/>
       </unmarshal>
-      <log message="unmarshalled: ${body.class.name} ${body}" loggingLevel="WARN"/>
-
+      <!-- Serializes maps to JSON -->
       <marshal>
         <json/>
       </marshal>
       <to uri="idscp2client://consumer-core:29292?awaitResponse=true&amp;sslContextParameters=#clientSslContext&amp;useIdsMessages=false"/>
-
+      <!-- Sets the correct header for the text answer "OK" -->
       <setHeader name="Content-Type">
         <constant>text/plain</constant>
       </setHeader>
-
     </route>
   </camelContext>
 </blueprint>
