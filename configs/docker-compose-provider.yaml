@@ -13,6 +13,7 @@ services:
       - ../cert-stores/truststore.p12:/root/etc/truststore.p12
       - ./example-provider-routes.xml:/root/deploy/example-provider-routes.xml
       - ./Wheatqualitycertification_short.csv:/root/deploy/Wheatqualitycertification_short.csv
+      - ./Wheatqualitycertification_MonitoringSample.csv:/root/deploy/Wheatqualitycertification_MonitoringSample.csv
 
     # Enable this lines for debugging or UI access from localhost
     ports:

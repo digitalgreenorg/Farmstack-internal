@@ -51,5 +51,23 @@
       </setHeader>
     </route>
 
+    <route id="sendData2">
+      <!-- <from uri="direct:update"/> -->
+      <from uri="file://deploy/?fileName=Wheatqualitycertification_MonitoringSample.csv&amp;charset=utf-8&amp;noop=true"/>
+      <!-- Parses CSV -->
+      <unmarshal>
+        <csv delimiter="," useMaps="true"/>
+      </unmarshal>
+      <!-- Serializes maps to JSON -->
+      <marshal>
+        <json/>
+      </marshal>
+      <to uri="idscp2client://consumer-core:29292?awaitResponse=true&amp;sslContextParameters=#clientSslContext&amp;useIdsMessages=false"/>
+      <!-- Sets the correct header for the text answer "OK" -->
+      <setHeader name="Content-Type">
+        <constant>text/plain</constant>
+      </setHeader>
+    </route>
+
   </camelContext>
 </blueprint>
