@@ -26,10 +26,9 @@
       <setHeader name="Content-Type">
         <constant>application/json</constant>
       </setHeader>
-      <to uri="http://consumer-app:8081/temp"/>
+      <to uri="http://consumer-app:8081/get_data"/>
 
     </route>
-
     
   </camelContext>
 </blueprint>
