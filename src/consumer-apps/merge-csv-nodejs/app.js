@@ -4,6 +4,7 @@ const bodyParser = require('body-parser');
 const request = require('request');
 
 const app = express();
+var data = ''
 
 // just use JSON body data
 app.use(bodyParser.json({
@@ -15,20 +16,24 @@ app.use(bodyParser.json({
 app.get('/', function (req, res) {
 
   try {
-    data = req.body
-    var html = '<html><body><h1> Consumer App is receiving two files </h1></body></html>';
-    res.send(html);
+    var html = '<html><body>CSV Data : '+  data +'</body></html>'
+    res.send(html)
   } catch (e) {
-    console.log(e);
+    next(e)
   }
+
 });
 
 // Receive Message
 app.post('/get_data', function (req, res) {
 
   try {
-    data = req.body
-    console.log('data -> ', data);
+    var req_body = req.body;
+    console.log('req_body ', JSON.stringify(req_body));
+
+    data = data + (JSON.stringify(req_body));
+    
+
     res.end('OK');
   } catch (e) {
     console.log(e);
