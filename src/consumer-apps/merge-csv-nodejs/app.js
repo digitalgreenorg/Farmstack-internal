@@ -4,7 +4,8 @@ const bodyParser = require('body-parser');
 const request = require('request');
 
 const app = express();
-var data = ''
+var data = {}
+var data_count = 0;
 
 // just use JSON body data
 app.use(bodyParser.json({
@@ -16,7 +17,10 @@ app.use(bodyParser.json({
 app.get('/', function (req, res) {
 
   try {
-    var html = '<html><body>CSV Data : '+  data +'</body></html>'
+    var html = '<html><body>CSV Data : '+  JSON.stringify(data) +
+      '<script> const data = ' + JSON.stringify(data) + ';' +
+      ' console.log(data) ' + 
+      ' </script></body></html>'
     res.send(html)
   } catch (e) {
     next(e)
@@ -30,9 +34,8 @@ app.post('/get_data', function (req, res) {
   try {
     var req_body = req.body;
     console.log('req_body ', JSON.stringify(req_body));
-
-    data = data + (JSON.stringify(req_body));
-    
+    data[data_count] = (JSON.stringify(req_body));
+    data_count ++;
 
     res.end('OK');
   } catch (e) {
