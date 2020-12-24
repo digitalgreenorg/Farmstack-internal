@@ -50,5 +50,6 @@
         <constant>text/plain</constant>
       </setHeader>
     </route>
+
   </camelContext>
 </blueprint>

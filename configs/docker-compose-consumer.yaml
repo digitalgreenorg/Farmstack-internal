@@ -27,7 +27,7 @@ services:
   consumer-app:
 
     build: 
-      context: ./example-server
+      context: ../src/consumer-apps/merge-csv-nodejs
     ports:
       - "8081:8081"
     networks:
@@ -35,7 +35,7 @@ services:
     
   api-app:
     build:
-      context: ./con-app/
+      context: ../src/consumer-apps/telegram-advisory-python
     ports:
       - "8888:8888"
     networks:
