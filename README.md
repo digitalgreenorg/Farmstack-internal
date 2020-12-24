@@ -21,14 +21,17 @@ Please follow the below steps
     To run provider node
         change directory to IDSA-FS-DEMO/configs
         run $docker-compose -f docker-compose-provider.yaml up
+        </br>
  2. Consumer
     To run the consumer node
         Change directory to IDSA-FS-DEMO/configs
         run $docker-compose -f docker-compose-consumer.yaml up
 
-The above configuration is build to run on a single machine.
-To separate provider and consumer on distributed instance :
-    add following lines in the respective files
+#### The above configuration is build to run on a single machine.
+
+- To separate provider and consumer on distributed instance :
+    ### add following lines in the respective files
+    
     a. docker-compose-provider.yaml
         extra_hosts:
             - "consumer-core:your-consumer-machine-ip"
