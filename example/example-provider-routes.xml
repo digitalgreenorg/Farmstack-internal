@@ -24,7 +24,7 @@
   <camelContext xmlns="http://camel.apache.org/schema/blueprint">
     <restConfiguration component="jetty" bindingMode="off" port="8989" enableCORS="true"/>
     <!-- defines the rest services using the context-path /user -->
-    <rest path="/postUSImg">
+    <rest path="/postCsv">
       <description>User rest service</description>
       <post>
         <to uri="direct:update"/>
@@ -34,8 +34,8 @@
     <!-- Retrieve temperature value from Data App via HTTP GET request and forward it over secure IDS protocol,
           setting remote attestation to most relaxed config (for demo only. Use 1 in production )-->
     <route id="sendData">
-      <from uri="direct:update"/>
-      <!-- <from uri="file://deploy/?fileName=Wheatqualitycertification_short.csv&amp;charset=utf-8&amp;noop=true"/> -->
+      <!-- <from uri="direct:update"/> -->
+      <from uri="file://deploy/?fileName=Wheatqualitycertification_short.csv&amp;charset=utf-8&amp;noop=true"/>
       <!-- Parses CSV -->
       <unmarshal>
         <csv delimiter="," useMaps="true"/>
