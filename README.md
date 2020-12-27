@@ -1,4 +1,4 @@
-### Farmstack Implementation Overview
+# Farmstack Implementation Overview
 
 <img src="workspace-architect.png"  height="250">
 
@@ -24,9 +24,9 @@ The code provided here lets run both the connectors on same machine. The section
         </br>
 
 
- ## To run connectors separately on provider and consumer
+ ### To run connectors separately on provider and consumer
  
-  # add following lines in the respective files
+  #### add following lines in the respective files
    
    a. docker-compose-provider.yaml 
         extra_hosts:
