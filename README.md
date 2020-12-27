@@ -1,17 +1,17 @@
 ### Farmstack Implementation PAD
 
-<img src="block_diagram.png"  height="400">
+<img src="workspace-architect.png"  height="400">
 
-#### Data Source - Wheat Rust
+#### Data Source - AI Tech Data
 </br>
 
-<img src="wheat_rust.png"  height="400">
+<img src="AI-tech-data.png"  height="400">
 
 </br>
 
-#### Data Source - DA 
+#### Data Source - Farmer Data 
 </br>
-<img src="da_registry.png"  height="400">
+<img src="farmer-data.png"  height="400">
 </br>
 
 
