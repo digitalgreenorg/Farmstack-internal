@@ -9,7 +9,7 @@ The data provider has two sample csv files in the format as provided by PAD, upl
 
 The code provided here lets run both the connectors on same machine. The section below gives description of how to run the connectors as it is and how to separarte them on distirbuted instances of data provider and consumer.
 
-### How to run the connectors
+### To run conenctors on single machine
 
 1. Provider
     To run provider node
@@ -21,16 +21,18 @@ The code provided here lets run both the connectors on same machine. The section
     To run the consumer node
         Change directory to IDSA-FS-DEMO/configs
         run $docker-compose -f docker-compose-consumer.yaml up
+        </br>
 
 
-- To separate provider and consumer on distributed instance :
-    ### add following lines in the respective files
-    
-    a. docker-compose-provider.yaml
+ ## To run connectors separately on provider and consumer
+ 
+  # add following lines in the respective files
+   
+   a. docker-compose-provider.yaml 
         extra_hosts:
             - "consumer-core:your-consumer-machine-ip"
             
-    b. docker-compose-consumer.yaml
+   b. docker-compose-consumer.yaml
         extra_hosts:
             - "provider-core:your-provider-machine-ip"
         
