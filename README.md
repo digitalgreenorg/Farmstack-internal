@@ -1,33 +1,27 @@
-### Farmstack Implementation PAD
+### Farmstack Implementation Overview
 
-<img src="workspace-architect.png"  height="400">
+<img src="workspace-architect.png"  height="250">
 
-#### Data Source - AI Tech Data
-</br>
+## Description
+This project is a reference inmplementation of farmstack. There is one provider and one consumer, both running a FarmStack p2p connector. The connectors mutually authenticate and encrypt data through the SSL certificates provided to them from a simulated certificate authority. 
 
-<img src="AI-tech-data.png"  height="400">
+The data provider has two sample csv files in the format as provided by PAD, uploaded in a google sheet [here]( https://docs.google.com/spreadsheets/d/1zrf4L7xoQ5MN76wM4T84WyWSmQFI6oA9/edit#gid=1033715415). The connector is a fork from [trusted connector](https://github.com/industrial-data-space/trusted-connector/) provided by IDSA - Fraunhofer, the stack on which FarmSTakc is built on. The data consumer receives the data in IDS protocol (a secured web socket protocol developed by Fraunhofer). It has a node application running within the conatiner of the p2p connector that renders and dsiplays the data in html format (browser).
 
-</br>
+The code provided here lets run both the connectors on same machine. The section below gives description of how to run the connectors as it is and how to separarte them on distirbuted instances of data provider and consumer.
 
-#### Data Source - Farmer Data 
-</br>
-<img src="farmer-data.png"  height="400">
-</br>
+### How to run the connectors
 
-
-## The above project consist of two component
-Please follow the below steps
- 1. Provider
+1. Provider
     To run provider node
         change directory to IDSA-FS-DEMO/configs
         run $docker-compose -f docker-compose-provider.yaml up
         </br>
- 2. Consumer
+
+2. Consumer
     To run the consumer node
         Change directory to IDSA-FS-DEMO/configs
         run $docker-compose -f docker-compose-consumer.yaml up
 
-#### The above configuration is build to run on a single machine.
 
 - To separate provider and consumer on distributed instance :
     ### add following lines in the respective files
