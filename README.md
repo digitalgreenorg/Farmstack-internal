@@ -1,4 +1,4 @@
-- ### Farmstack Architecture : A secure workspace
+- ### Farmstack Implementation PAD
 
 <img src="block_diagram.png"  height="400">
 
