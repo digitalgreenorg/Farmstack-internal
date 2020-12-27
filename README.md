@@ -35,6 +35,7 @@ Please follow the below steps
     a. docker-compose-provider.yaml
         extra_hosts:
             - "consumer-core:your-consumer-machine-ip"
+            
     b. docker-compose-consumer.yaml
         extra_hosts:
             - "provider-core:your-provider-machine-ip"
