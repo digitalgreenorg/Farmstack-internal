@@ -1,4 +1,4 @@
-- ### Farmstack Implementation PAD
+### Farmstack Implementation PAD
 
 <img src="block_diagram.png"  height="400">
 
