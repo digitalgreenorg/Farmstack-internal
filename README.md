@@ -16,10 +16,13 @@ Config/
  - for example: 
         To configure application container on provider connector, change into docker-compose-provider, 
         To change the routing configurations, change into respective xml files.
+        
+</br>
 Src/ 
  - Includes the application code 
  - provider-apps: contains the application related to provider connector
  - Consumer-apps: contains the application related to consumer connector
+</br>
 
 cert stores/
  - Includes the certificate files issued by certificate authority
