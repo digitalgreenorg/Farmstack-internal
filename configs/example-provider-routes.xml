@@ -35,7 +35,7 @@
           setting remote attestation to most relaxed config (for demo only. Use 1 in production )-->
     <route id="sendData">
       <!-- <from uri="direct:update"/> -->
-      <from uri="file://deploy/?fileName=Wheatqualitycertification_short.csv&amp;charset=utf-8&amp;noop=true"/>
+      <from uri="file://deploy/?fileName=ai_tech_data.csv&amp;charset=utf-8&amp;noop=true"/>
       <!-- Parses CSV -->
       <unmarshal>
         <csv delimiter="," useMaps="true"/>
@@ -53,7 +53,7 @@
 
     <route id="sendData2">
       <!-- <from uri="direct:update"/> -->
-      <from uri="file://deploy/?fileName=Wheatqualitycertification_MonitoringSample.csv&amp;charset=utf-8&amp;noop=true"/>
+      <from uri="file://deploy/?fileName=farmer_data.csv&amp;charset=utf-8&amp;noop=true"/>
       <!-- Parses CSV -->
       <unmarshal>
         <csv delimiter="," useMaps="true"/>

@@ -12,8 +12,8 @@ services:
       - ../cert-stores/provider-keystore.p12:/root/etc/provider-keystore.p12
       - ../cert-stores/truststore.p12:/root/etc/truststore.p12
       - ./example-provider-routes.xml:/root/deploy/example-provider-routes.xml
-      - ./Wheatqualitycertification_short.csv:/root/deploy/Wheatqualitycertification_short.csv
-      - ./Wheatqualitycertification_MonitoringSample.csv:/root/deploy/Wheatqualitycertification_MonitoringSample.csv
+      - ./farmer_data.csv:/root/deploy/farmer_data.csv
+      - ./ai_tech_data.csv:/root/deploy/ai_tech_data.csv
 
     # Enable this lines for debugging or UI access from localhost
     ports:
