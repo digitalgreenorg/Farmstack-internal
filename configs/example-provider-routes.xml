@@ -16,6 +16,7 @@
     </camel:trustManagers>
   </camel:sslContextParameters>
 
+  <!-- Camel parsing configuration for json-->
   <camel:dataFormats>
     <camel:json id="jack" library="Jackson" prettyPrint="true"/>
   </camel:dataFormats>
@@ -23,34 +24,39 @@
   <!-- Routes -->
   <camelContext xmlns="http://camel.apache.org/schema/blueprint">
     <restConfiguration component="jetty" bindingMode="off" port="8989" enableCORS="true"/>
-    <!-- defines the rest services using the context-path /user -->
+    <!-- Defines the alternative route on rest services using the context-path /postCsv -->
     <rest path="/postCsv">
-      <description>User rest service</description>
+      <description>CSV rest service</description>
       <post>
         <to uri="direct:update"/>
       </post>
     </rest>
 
-    <!-- Retrieve AI Tech Data  & Farmer Data from Data App via HTTP GET request and forward it over secure IDS protocol,
-          setting remote attestation to most relaxed config (for demo only. Use 1 in production )-->
+    <!-- Define first route named sendData that retrieves AI Tech Data (reading the file mounted in the container - provider core) and 
+         forwards it over secure IDS commonunication protocol -->
     <route id="sendData">
       <!-- <from uri="direct:update"/> -->
+      <!-- Read the csv file -->
       <from uri="file://deploy/?fileName=ai_tech_data.csv&amp;charset=utf-8&amp;noop=true"/>
       <!-- Parses CSV -->
       <unmarshal>
         <csv delimiter="," useMaps="true"/>
       </unmarshal>
-      <!-- Serializes maps to JSON -->
+      <!-- Serializes and maps to JSON -->
       <marshal>
         <json/>
       </marshal>
+      <!-- Forward to secure container "consumer core" through IDSCP2 (IDS communication protocol) -->
       <to uri="idscp2client://consumer-core:29292?awaitResponse=true&amp;sslContextParameters=#clientSslContext&amp;useIdsMessages=false"/>
-      <!-- Sets the correct header for the text answer "OK" -->
+      <!-- Sets the content type -->
       <setHeader name="Content-Type">
         <constant>text/plain</constant>
       </setHeader>
     </route>
 
+    <!-- Define second route named sendData that retrieves AI Tech Data (reading the file mounted in the container - provider core) and 
+         forwards it over secure IDS commonunication protocol -->
+    
     <route id="sendData2">
       <!-- <from uri="direct:update"/> -->
       <from uri="file://deploy/?fileName=farmer_data.csv&amp;charset=utf-8&amp;noop=true"/>
