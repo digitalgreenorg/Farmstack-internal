@@ -9,7 +9,7 @@ The data provider has two sample csv files in the format as provided by PAD, upl
 
 The code provided here lets run both the connectors on same machine. The section below gives description of how to run the connectors as it is and how to separarte them on distirbuted instances of data provider and consumer.
 
-### Structure
+### Folder structure
 
 Config/ 
  - Includes the configuration related files 
@@ -45,7 +45,7 @@ Cert stores/
 
  ### To run connectors separately on provider and consumer
  
-  #### add following lines in the respective files
+  #### Add following lines in the respective files
    
    a. docker-compose-provider.yaml 
         extra_hosts:
