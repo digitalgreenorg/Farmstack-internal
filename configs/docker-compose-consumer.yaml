@@ -12,9 +12,13 @@ services:
       - ../cert-stores/consumer-keystore.p12:/root/etc/consumer-keystore.p12
       - ../cert-stores/truststore.p12:/root/etc/truststore.p12
       - ./example-consumer-routes.xml:/root/deploy/example-consumer-routes.xml
-    # Enable this port mappings for debugging or UI access from localhost
+
+    # Uncomment to run the provider & consumer nodes on separate server 
+    # replace x.x.x.x with the provider ip address
     # extra_hosts:
-    #  - "provider-core:your-provider-machine-ip"
+    #  - "provider-core:x.x.x.x"
+
+    # Enable this port mappings for debugging or UI access from localhost
     ports:
     # Enable this port mapping (along with "ports:" above) to allow access to IDSCP from outside the ids-wide network
       - "29292:29292"
