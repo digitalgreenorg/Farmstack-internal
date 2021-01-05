@@ -29,7 +29,7 @@ app.get('/', function (req, res) {
 });
 
 // Receive Message
-app.post('/get_data', function (req, res) {
+app.post('/post_data', function (req, res) {
 
   try {
     var req_body = req.body;

@@ -30,7 +30,7 @@
       </setHeader>
 
       <!-- Forwarding data to display on front end -->
-      <to uri="http://consumer-app:8081/get_data"/>
+      <to uri="http://consumer-app:8081/post_data"/>
 
     </route>
     
