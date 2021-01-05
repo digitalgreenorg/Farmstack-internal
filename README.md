@@ -3,7 +3,7 @@
 <img src="workspace-architect.png"  height="250">
 
 ## Description
-This project is a reference inmplementation of farmstack. There is one provider and one consumer, both running a FarmStack p2p connector. The connectors mutually authenticate and encrypt data through the SSL certificates provided to them from a simulated certificate authority. 
+This project is a reference implementation of farmstack. There is one provider and one consumer, both running a FarmStack p2p connector. The connectors mutually authenticate and encrypt data through the SSL certificates provided to them from a simulated certificate authority. 
 
 The data provider has two sample csv files in the format as provided by PAD, uploaded in a google sheet [here]( https://docs.google.com/spreadsheets/d/1zrf4L7xoQ5MN76wM4T84WyWSmQFI6oA9/edit#gid=1033715415). The connector is a fork from [trusted connector](https://github.com/industrial-data-space/trusted-connector/) provided by IDSA - Fraunhofer, the stack on which FarmSTakc is built on. The data consumer receives the data in IDS protocol (a secured web socket protocol developed by Fraunhofer). It has a node application running within the conatiner of the p2p connector that renders and dsiplays the data in html format (browser).
 
@@ -12,16 +12,12 @@ The code provided here lets run both the connectors on same machine. The section
 ### Folder structure
 
 Config/ 
- - Includes the configuration related files 
- - for example: 
-   - To configure application container on provider connector, change into docker-compose-provider, 
-   - To change the routing configurations, change into respective xml files.        
+ - Includes the configuration related files: 
+   - Docker configuration for Provider and consumer connectors (yaml files) 
+   - Data routing configurations of provider and consumer (xml files)        
 </br>
 Src/ 
-
- - Includes the application code 
- - provider-apps: contains the application related to provider connector
- - Consumer-apps: contains the application related to consumer connector
+ - Includes the demo nodejs application code 
 </br>
 
 Cert stores/
