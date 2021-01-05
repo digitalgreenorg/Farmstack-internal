@@ -14,7 +14,9 @@ services:
       - ./example-provider-routes.xml:/root/deploy/example-provider-routes.xml
       - ./farmer_data.csv:/root/deploy/farmer_data.csv
       - ./ai_tech_data.csv:/root/deploy/ai_tech_data.csv
-
+    
+    # extra_hosts:
+    #  - "consumer-core:your-consumer-machine-ip"
     ports:
       - 8989:8989
     
