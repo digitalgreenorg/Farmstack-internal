@@ -13,10 +13,11 @@ The code provided here lets run both the connectors on same machine. The section
 
 Config/ 
  - Includes the configuration related files: 
-   - Docker configuration for Provider and consumer connectors (yaml files) 
+   - Docker configuration for provider and consumer connectors (yaml files) 
    - Data routing configurations of provider and consumer (xml files)        
 </br>
-Src/ 
+
+Src/  
  - Includes the demo nodejs application code 
 </br>
 
