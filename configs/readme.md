@@ -1,4 +1,4 @@
-## Test
+## File structure
 docker-compose-consumer.yaml : 
     - To configure and manage containers related to consumer node
     eg. to open a port, to add extra-host, to create more data consumer apps
