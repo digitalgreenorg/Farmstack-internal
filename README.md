@@ -28,16 +28,14 @@ Cert stores/
  - Includes the certificate files issued by certificate authority
 
 
-### To run conenctors on single machine
+### To run connectors on single machine
 
-1. Provider
-    To run provider node
+1. To run provider node </br>
         change directory to IDSA-FS-DEMO/configs
         run $docker-compose -f docker-compose-provider.yaml up
         </br>
 
-2. Consumer
-    To run the consumer node
+2. To run the consumer node </br>
         Change directory to IDSA-FS-DEMO/configs
         run $docker-compose -f docker-compose-consumer.yaml up
         </br>
@@ -47,11 +45,11 @@ Cert stores/
  
   #### Add following lines in the respective files
    
-   a. docker-compose-provider.yaml 
+   a. In the directory Configs/ add in the file docker-compose-provider.yaml following line </br>
         extra_hosts:
             - "consumer-core:your-consumer-machine-ip"
             
-   b. docker-compose-consumer.yaml
+   b. In the directory Configs/ add in the file docker-compose-consumer.yaml following line </br>
         extra_hosts:
             - "provider-core:your-provider-machine-ip"
         
