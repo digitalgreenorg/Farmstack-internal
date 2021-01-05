@@ -67,7 +67,8 @@
       <marshal>
         <json/>
       </marshal>
-
+      
+      <!-- Forward to secure container "consumer core" through  IDS communication protocol (IDSCP2) -->
       <to uri="idscp2client://consumer-core:29292?awaitResponse=true&amp;sslContextParameters=#clientSslContext&amp;useIdsMessages=false"/>
       
       <!-- Sets the content type -->
