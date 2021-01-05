@@ -1,16 +1,15 @@
 ## File structure
-docker-compose-consumer.yaml : 
-    - To configure and manage containers related to consumer node
-    eg. to open a port, to add extra-host, to create more data consumer apps
 
-docker-compose-provider.yaml :
-    - To configure and manage containers related to provider node
-    eg. to manage ports, to add extra-hos, to create more data provider apps
+docker-compose-provider.yaml :</br>
+    Instantiates the configuration of docker containers on provider connector like ports, networks etc. </br>
+    This is the file that needs to be executed to run the provider connector. To run the provider connector execute the command, docker-compose -f docker-compose-provider.yaml up</br>
 
-example-provider-routes.xml :
-    - To configure the routing of provider node
-    eg. To change the URIs, file path and running ports, tweaks params related
+docker-compose-consumer.yaml : </br> 
+    Instantiates the configuration of docker containers on consumer connector like ports, networks etc. </br>
+    This is the file that needs to be executed to run the consumer connector. To run the provider connector execute the command, docker-compose -f docker-compose-consumer.yaml up</br>
 
-example-consumer-routes.xml :
-    - To configure the routing of consumer node
-    eg. To change the URIs and tweaks params related, tweaks params related
+example-provider-routes.xml :</br>
+    Configures data routing at the provider connector using [CAMEL](https://camel.apache.org/).
+
+example-consumer-routes.xml :</br>
+    Configures data routing at the consumer connector using [CAMEL](https://camel.apache.org/).
