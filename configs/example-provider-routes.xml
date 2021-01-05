@@ -23,56 +23,58 @@
 
   <!-- Routes -->
   <camelContext xmlns="http://camel.apache.org/schema/blueprint">
-    <restConfiguration component="jetty" bindingMode="off" port="8989" enableCORS="true"/>
-    <!-- Defines the alternative route on rest services using the context-path /postCsv -->
-    <rest path="/postCsv">
-      <description>CSV rest service</description>
-      <post>
-        <to uri="direct:update"/>
-      </post>
-    </rest>
 
-    <!-- Define first route named sendData that retrieves AI Tech Data (reading the file mounted in the container - provider core) and 
-         forwards it over secure IDS commonunication protocol -->
-    <route id="sendData">
-      <!-- <from uri="direct:update"/> -->
+    <!-- Define first route that retrieves AI Tech Data and forwards it over secure IDS 
+          commonunication protocol(IDSCP2) -->
+    <route id="sendAITechData">
+
       <!-- Read the csv file -->
       <from uri="file://deploy/?fileName=ai_tech_data.csv&amp;charset=utf-8&amp;noop=true"/>
+      
       <!-- Parses CSV -->
       <unmarshal>
         <csv delimiter="," useMaps="true"/>
       </unmarshal>
-      <!-- Serializes and maps to JSON -->
+      
+      <!-- Serialize data to JSON -->
       <marshal>
         <json/>
       </marshal>
-      <!-- Forward to secure container "consumer core" through IDSCP2 (IDS communication protocol) -->
+
+      <!-- Forward to secure container "consumer core" through  IDS communication protocol (IDSCP2) -->
       <to uri="idscp2client://consumer-core:29292?awaitResponse=true&amp;sslContextParameters=#clientSslContext&amp;useIdsMessages=false"/>
+      
       <!-- Sets the content type -->
       <setHeader name="Content-Type">
-        <constant>text/plain</constant>
+        <constant>application/json</constant>
       </setHeader>
+
     </route>
 
-    <!-- Define second route named sendData that retrieves AI Tech Data (reading the file mounted in the container - provider core) and 
-         forwards it over secure IDS commonunication protocol -->
-    
-    <route id="sendData2">
-      <!-- <from uri="direct:update"/> -->
+    <!-- Define Second route that retrieves Farmer Data and forwards it over secure IDS 
+          commonunication protocol(IDSCP2) -->
+    <route id="sendFarmerData">
+
+      <!-- Read the csv file -->
       <from uri="file://deploy/?fileName=farmer_data.csv&amp;charset=utf-8&amp;noop=true"/>
+      
       <!-- Parses CSV -->
       <unmarshal>
         <csv delimiter="," useMaps="true"/>
       </unmarshal>
-      <!-- Serializes maps to JSON -->
+      
+      <!-- Serializes data to JSON -->
       <marshal>
         <json/>
       </marshal>
+
       <to uri="idscp2client://consumer-core:29292?awaitResponse=true&amp;sslContextParameters=#clientSslContext&amp;useIdsMessages=false"/>
-      <!-- Sets the correct header for the text answer "OK" -->
+      
+      <!-- Sets the content type -->
       <setHeader name="Content-Type">
-        <constant>text/plain</constant>
+        <constant>application/json</constant>
       </setHeader>
+
     </route>
 
   </camelContext>

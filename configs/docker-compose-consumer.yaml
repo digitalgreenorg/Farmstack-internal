@@ -14,11 +14,9 @@ services:
       - ./example-consumer-routes.xml:/root/deploy/example-consumer-routes.xml
     # Enable this port mappings for debugging or UI access from localhost
     ports:
-#      - "5005:5005"
-#      - "8181:8181"
-#      - "8443:8443"
     # Enable this port mapping (along with "ports:" above) to allow access to IDSCP from outside the ids-wide network
       - "29292:29292"
+    # Using two networks ids-wide and consumer-internal for external comunication and internal communication, respectively
     networks:
       - ids-wide
       - consumer-internal

@@ -15,12 +15,10 @@ services:
       - ./farmer_data.csv:/root/deploy/farmer_data.csv
       - ./ai_tech_data.csv:/root/deploy/ai_tech_data.csv
 
-    # Enable this lines for debugging or UI access from localhost
     ports:
       - 8989:8989
-#      - "5005:5005"
-#      - "8181:8181"
-#      - "8443:8443"
+    
+    # Using two networks ids-wide and provider-internal for external comunication and internal communication respectively
     networks:
       - ids-wide
       - provider-internal

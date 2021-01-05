@@ -19,13 +19,17 @@
 
   <!-- Routes -->
   <camelContext xmlns="http://camel.apache.org/schema/blueprint">
-    <!-- Retrieve AI Tech Data & Farmer Data from IDS protocol, setting remote attestation to most relaxed config (for
-          demo only. Use 1 in production). Forward to Data App 2 -->
+
+    <!-- Retrieve AI Tech Data & Farmer Data from IDS protocol(IDSCP2) -->
     <route id="receiveData">
       <from uri="idscp2server://0.0.0.0:29292?sslContextParameters=#serverSslContext&amp;useIdsMessages=false"/>
+
+      <!-- Sets Content type -->
       <setHeader name="Content-Type">
         <constant>application/json</constant>
       </setHeader>
+
+      <!-- Forwarding data to display on front end -->
       <to uri="http://consumer-app:8081/get_data"/>
 
     </route>
