@@ -26,7 +26,7 @@ services:
   # Data App (REST consumer, displays web page)
   consumer-app:
     image: merge-csv-nodejs
-    # build: 
+    # build:
     #   context: ./example-server
     ports:
       - "8081:8081"
