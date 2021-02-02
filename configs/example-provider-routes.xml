@@ -41,7 +41,7 @@ The specification describes how the components get instantiated and wired togeth
     <!-- componet - camel-netty-http, camel-jetty, camel-servlet, camel-undertow -->
     <restConfiguration component="jetty" bindingMode="off" port="8989" enableCORS="true"/>
 
-    <!-- Create a rest path and update upon creation -->
+    <!-- Create a rest path -->
     <rest path="/postUSImg">
       <description>User rest service</description>
       <post>
@@ -61,7 +61,7 @@ The specification describes how the components get instantiated and wired togeth
       </setProperty>
       <setProperty name="containerUri">
         <!-- local registry for docker -->
-        <constant>https://private.docker.image/sha256-e1286554f18c0f38edc9dddaa60a328a955e583dde4b42a7b4595bd1d1a1e44b#8081</constant>
+        <constant>https://private.docker.image/sha256:a6efe279ff5cd17f392a61bbf97b95cd4ab31a561f2d4eb114228331b9cce038#8081</constant>
       </setProperty>
       <!-- The Processor interface is used to implement consumers of message exchanges or to implement a Message Translator i.e process the message into correct format. -->
       

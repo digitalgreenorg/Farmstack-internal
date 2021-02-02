@@ -11,9 +11,8 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
       - ../cert-stores/provider-keystore.p12:/root/etc/provider-keystore.p12
       - ../cert-stores/truststore.p12:/root/etc/truststore.p12
-      - ./example-provider-routes.xml:/root/deploy/example-provider-routes.xml
-      - ./farmer_data.csv:/root/deploy/farmer_data.csv
-      - ./ai_tech_data.csv:/root/deploy/ai_tech_data.csv
+      - /Users/sagar/Desktop/usage_control/IDSA-FS-Demo/configs/example-provider-routes.xml:/root/deploy/example-provider-routes.xml
+      - ./Wheatqualitycertification_short.csv:/root/deploy/Wheatqualitycertification_short.csv
     
     # Uncomment to run the provider & consumer nodes on separate server 
     # replace x.x.x.x with the consumer ip address
