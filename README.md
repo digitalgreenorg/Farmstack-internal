@@ -5,7 +5,7 @@ FarmStack consists of a p2p connector which is a fork from the [trusted connecto
 
 <img src="data_sharing.png"  height="250">
 
-## Connector architecture details
+### Connector architecture details
 
 <img src="connector_architecture.png"  height="250">
 
