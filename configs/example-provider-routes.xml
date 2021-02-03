@@ -61,7 +61,7 @@ The specification describes how the components get instantiated and wired togeth
       </setProperty>
       <setProperty name="containerUri">
         <!-- local registry for docker -->
-        <constant>https://private.docker.image/sha256:a6efe279ff5cd17f392a61bbf97b95cd4ab31a561f2d4eb114228331b9cce038#8081</constant>
+        <constant>https://private.docker.image/sha256-a66751153fb06dada83e3805af70dde28386c194f28f2727ec5033277529ac1d#8081</constant>
       </setProperty>
       <!-- The Processor interface is used to implement consumers of message exchanges or to implement a Message Translator i.e process the message into correct format. -->
       
@@ -88,7 +88,7 @@ The specification describes how the components get instantiated and wired togeth
           <log loggingLevel="ERROR" message="Expected ContractAgreementMessage, but received:\n${body}\n### Header: ###\n${headers[idscp2-header]}"/>
         </otherwise>
       </choice>
-      <!-- removes idscp2 header. Why ? -->
+      <!-- removes idscp2 header -->
       <removeHeader headerName="idscp2-header" />
       <setBody>
         <simple>${null}</simple>
@@ -98,6 +98,10 @@ The specification describes how the components get instantiated and wired togeth
     <route id="sendData">
       <!-- <from uri="direct:update"/> -->
       <from uri="file://deploy/?fileName=Wheatqualitycertification_short.csv&amp;charset=utf-8&amp;noop=true"/>
+      <!-- ensure that contract agreement is made before sending-->
+      <delay asyncDelayed="true">
+        <constant>10000</constant>
+      </delay>
       <!-- Parses CSV -->
       <unmarshal>
         <csv delimiter="," useMaps="true"/>

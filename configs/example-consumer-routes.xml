@@ -39,20 +39,20 @@ The specification describes how the components get instantiated and wired togeth
       <!-- The Content Based Router from the EIP patterns allows you to route messages to the correct destination based on the contents of the message exchanges. -->
       <choice>
         <when>
-          <!-- Check for valid contract message  -->
+          <!-- Check for valid contract message -->
           <simple>${exchangeProperty.ids-type} == 'ContractOfferMessage'</simple>
           <log message="### Handle ContractOfferMessage ###"/>
           <!-- Only processing of incoming request must be performed, no reply -->
           <process ref="ContractOfferProcessor"/>
         </when>
         <when>
-          <!-- process if property is ResourceUpdateMessage  -->
+          <!-- process if property is ResourceUpdateMessage -->
           <simple>${exchangeProperty.ids-type} == 'ResourceUpdateMessage'</simple>
           <log message="### Handle ResourceUpdateMessage ###"/>
           <setHeader name="Content-Type">
             <constant>application/json</constant>
           </setHeader>
-          <to uri="http://consumer-app:8081/temp"/>
+          <to uri="http://consumer-app:8081/post_data"/>
         </when>
         <otherwise>
           <!-- if header doesn't match to a known header -->
