@@ -27,13 +27,13 @@ In the current code, step1 is simulated by having a dummy ContractRequest.
 ## Provider
 1. Class name: ContractOfferCreationProcessor
     1. Function: 
-    - takes ContractRequestMessage as input and gives ContractResponseMessage as output
-    - Sets container uri property to a hash value thereby allowing use of data only by a specific container
-    - Serializes ContractOffer to a json object
+        - takes ContractRequestMessage as input and gives ContractResponseMessage as output
+        - Sets container uri property to a hash value thereby allowing use of data only by a specific container
+        - Serializes ContractOffer to a json object
     2. Important methods:
-    - ContractOfferBuilder() from de.fraunhofer.iais.eis.* 
-    - Utils [source](https://github.com/industrial-data-space/trusted-connector/blob/develop/camel-idscp2/src/main/- - kotlin/de/fhg/aisec/ids/camel/idscp2/Utils.kt)
-    - Constants [source](https://github.com/industrial-data-space/trusted-connector/blob/develop/camel-idscp2/src/main/kotlin/de/fhg/aisec/ids/camel/idscp2/Constants.kt)
+        - ContractOfferBuilder() from de.fraunhofer.iais.eis.* 
+        - Utils [source](https://github.com/industrial-data-space/trusted-connector/blob/develop/camel-idscp2/src/main/- - kotlin/de/fhg/aisec/ids/camel/idscp2/Utils.kt)
+        - Constants [source](https://github.com/industrial-data-space/trusted-connector/blob/develop/camel-idscp2/src/main/kotlin/de/fhg/aisec/ids/camel/idscp2/Constants.kt)
     3. Where: the first step of the route
 
 2. Class name: TypeExtractionProcessor
@@ -42,11 +42,11 @@ In the current code, step1 is simulated by having a dummy ContractRequest.
     3. Where: After Provider sends ContractResponseMessage ContractAgreementMessage is 
 3. Class name: ContractAgreementReceiverProcessor
     1. Function:
-    - Takes ContractAgreement as input and saves it to UsageControlMaps object 
-    - Deserialize ContractAgreement and saves its properties like container uri and artifacturi to hashmap for quick lookup in ProviderDB object
+        - Takes ContractAgreement as input and saves it to UsageControlMaps object 
+        - Deserialize ContractAgreement and saves its properties like container uri and artifacturi to hashmap for quick lookup in ProviderDB object
     2. Important methods:
-    - ProviderDB [source](https://github.com/industrial-data-space/trusted-connector/blob/develop/camel-idscp2/src/main/kotlin/de/fhg/aisec/ids/camel/idscp2/Constants.kt)
-    - UsageCotnrolMaps [source](https://github.com/industrial-data-space/trusted-connector/blob/develop/camel-idscp2/src/main/kotlin/de/fhg/aisec/ids/camel/idscp2/UsageControlMaps.kt)
+        - ProviderDB [source](https://github.com/industrial-data-space/trusted-connector/blob/develop/camel-idscp2/src/main/kotlin/de/fhg/aisec/ids/camel/idscp2/Constants.kt)
+        - UsageCotnrolMaps [source](https://github.com/industrial-data-space/trusted-connector/blob/develop/camel-idscp2/src/main/kotlin/de/fhg/aisec/ids/camel/idscp2/UsageControlMaps.kt)
     3. Where: Last step of accepting agreement
 4. Class name: ResourceUpdateCreationProcessor
     1. Function:
@@ -57,9 +57,9 @@ In the current code, step1 is simulated by having a dummy ContractRequest.
 ## Consumer
 1. Class name: ContractOfferProcessor
     1. Function:
-    - Handles a ContractResponseMessage and creates a ContractAgreementMessage
+        - Handles a ContractResponseMessage and creates a ContractAgreementMessage
     2. Saves contract
-    - Important methods: covered in previous classes
+        - Important methods: covered in previous classes
     3. Where: The first message to consumer
 2. Class name: TypeExtractionProcessor
     1. Covered in provider (same function here)
