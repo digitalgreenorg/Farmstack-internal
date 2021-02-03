@@ -46,8 +46,8 @@ The current UC integration is provisioned to facilitate no-tampering in the runn
 ## Steps to prepare for UC integration :
 
 Assuming we are in configs folder
-docker build ../src/consumer-apps/merge-csv-nodejs -t merge-csv-nodejs -q
-output - <image hash>
-save merge-csv-nodejs > merge-csv-nodejs.tar
-docker load -i merge-csv-nodejs.tar
-docker tag <image hash> merge-csv-nodejs
+docker build ../src/consumer-apps/merge-csv-nodejs -t merge-csv-nodejs -q<br>
+output - <image hash><br>
+save merge-csv-nodejs > merge-csv-nodejs.tar<br>
+docker load -i merge-csv-nodejs.tar<br>
+docker tag <image hash> merge-csv-nodejs<br>
