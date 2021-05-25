@@ -11,6 +11,8 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
       - ../cert-stores/provider-keystore.p12:/root/etc/provider-keystore.p12
       - ../cert-stores/truststore.p12:/root/etc/truststore.p12
+      - ./allow-all-flows.pl:/root/deploy/allow-all-flows.pl
+      - ./settings.mapdb:/root/etc/settings.mapdb
       - ./example-provider-routes.xml:/root/deploy/example-provider-routes.xml
       - ./farmer_data.csv:/root/deploy/farmer_data.csv
       - ./ai_tech_data.csv:/root/deploy/ai_tech_data.csv
