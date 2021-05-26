@@ -17,15 +17,16 @@
     </camel:trustManagers>
   </camel:sslContextParameters>
 
-  <!-- Camel parsing configuration for json-->
   
 
   <!-- Routes -->
   <camelContext xmlns="http://camel.apache.org/schema/spring">
 
-    <!-- <dataFormats>
+
+  <!-- Camel parsing configuration for json-->
+    <dataFormats>
       <json id="jack" library="Jackson" prettyPrint="true"/>
-    </dataFormats> -->
+    </dataFormats>
 
     <!-- Define first route that retrieves AI Tech Data and forwards it over secure IDS 
           commonunication protocol(IDSCP2) -->
@@ -40,13 +41,13 @@
       </unmarshal> 
       
       <!-- Serialize data to JSON -->
-      <log message="Unmarshalled ${body.class.name} ${body}" logLevel="INFO" />
+      <log message="Unmarshalled body: ${body}"/>
       <!-- <marshal ref="jack" /> -->
-      <!-- <log message="marshalled ${body.class.name} ${body}" logLevel="INFO" /> -->
       
-      <!-- <marshal>
+      <marshal>
         <json/>
-      </marshal> -->
+      </marshal>
+      <log message="marshalled body: ${body}"/>
 
       <!-- Forward to secure container "consumer core" through  IDS communication protocol (IDSCP2) -->
       <to uri="idscp2client://consumer-core:29292?awaitResponse=true&amp;sslContextParameters=#clientSslContext&amp;useIdsMessages=false"/>
@@ -69,11 +70,12 @@
       <unmarshal>
         <csv delimiter="," useMaps="true"/>
       </unmarshal>
-      
+      <log message="Unmarshalled body: ${body}"/>
       <!-- Serializes data to JSON -->
-      <!-- <marshal>
+      <marshal>
         <json/>
-      </marshal> -->
+      </marshal>
+      <log message="marshalled body: ${body}"/>
       
       <!-- Forward to secure container "consumer core" through  IDS communication protocol (IDSCP2) -->
       <to uri="idscp2client://consumer-core:29292?awaitResponse=true&amp;sslContextParameters=#clientSslContext&amp;useIdsMessages=false"/>

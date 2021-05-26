@@ -16,6 +16,10 @@ services:
       - ./example-provider-routes.xml:/root/deploy/example-provider-routes.xml
       - ./farmer_data.csv:/root/deploy/farmer_data.csv
       - ./ai_tech_data.csv:/root/deploy/ai_tech_data.csv
+      # temporary fix for jars
+      - ../jars/camel-csv-3.0.1.jar:/root/jars/camel-csv-3.0.1.jar
+      - ../jars/camel-jackson-3.0.1.jar:/root/jars/camel-jackson-3.0.1.jar
+      - ../jars/commons-csv-1.8.jar:/root/jars/commons-csv-1.8.jar
     
     # Uncomment to run the provider & consumer nodes on separate server 
     # replace x.x.x.x with the consumer ip address
