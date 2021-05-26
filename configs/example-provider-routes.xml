@@ -23,10 +23,6 @@
   <!-- Routes -->
   <camelContext xmlns="http://camel.apache.org/schema/spring">
 
-    <!-- <dataFormats>
-      <json id="jack" library="Jackson" prettyPrint="true"/>
-    </dataFormats> -->
-
     <!-- Define first route that retrieves AI Tech Data and forwards it over secure IDS 
           commonunication protocol(IDSCP2) -->
     <route id="sendAITechData">
@@ -37,24 +33,18 @@
       <!-- Parses CSV -->
       <unmarshal>
         <csv delimiter="," useMaps="true"/>
-      </unmarshal> 
+      </unmarshal>
       
       <!-- Serialize data to JSON -->
-      <log message="Unmarshalled ${body.class.name} ${body}" logLevel="INFO" />
-      <!-- <marshal ref="jack" /> -->
-      <!-- <log message="marshalled ${body.class.name} ${body}" logLevel="INFO" /> -->
+      <log message="Unmarshalled ${body.class.name} ${body}"/>
       
-      <!-- <marshal>
+      <marshal>
         <json/>
-      </marshal> -->
+      </marshal>
+      <log message="marshalled ${body.class.name} ${body}"/>
 
       <!-- Forward to secure container "consumer core" through  IDS communication protocol (IDSCP2) -->
       <to uri="idscp2client://consumer-core:29292?awaitResponse=true&amp;sslContextParameters=#clientSslContext&amp;useIdsMessages=false"/>
-      
-      <!-- Sets the content type -->
-      <setHeader name="Content-Type">
-        <constant>application/json</constant>
-      </setHeader>
 
     </route>
 
@@ -64,24 +54,19 @@
 
       <!-- Read the csv file -->
       <from uri="file://deploy/?fileName=farmer_data.csv&amp;charset=utf-8&amp;noop=true"/>
-      
+
       <!-- Parses CSV -->
       <unmarshal>
         <csv delimiter="," useMaps="true"/>
       </unmarshal>
-      
+
       <!-- Serializes data to JSON -->
-      <!-- <marshal>
+      <marshal>
         <json/>
-      </marshal> -->
-      
+      </marshal>
+
       <!-- Forward to secure container "consumer core" through  IDS communication protocol (IDSCP2) -->
       <to uri="idscp2client://consumer-core:29292?awaitResponse=true&amp;sslContextParameters=#clientSslContext&amp;useIdsMessages=false"/>
-      
-      <!-- Sets the content type -->
-      <setHeader name="Content-Type">
-        <constant>application/json</constant>
-      </setHeader>
 
     </route>
 
