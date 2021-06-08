@@ -18,8 +18,9 @@
   },
   "homepage": "https://github.com/FraunhoferAISEC",
   "dependencies": {
-    "express": "^4.16.4",
     "body-parser": "^1.18.3",
+    "ejs": "^3.1.6",
+    "express": "^4.16.4",
     "request": "^2.88.2"
   },
   "devDependencies": {
